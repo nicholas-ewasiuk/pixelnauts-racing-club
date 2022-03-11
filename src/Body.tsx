@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { ModdedWalletButton } from "./components/ModdedWalletButton";
 import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
+import { Canvas } from "./components/Canvas";
 
 export const Body: React.FC = () => {
   const [ balance, setBalance ] = useState<number | null>(null);
@@ -28,6 +29,7 @@ export const Body: React.FC = () => {
         wallet={wallet}
         balance={balance}
       />
+      <Canvas />
     </AppWrapper>
   );
 };
