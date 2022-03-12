@@ -18,9 +18,9 @@ export const breakpoints = {
 const App: React.FC = () => {
   return (
     <WalletKitProvider
-      defaultNetwork='devnet'
+      defaultNetwork='mainnet-beta'
       app={{
-        name: 'tic-tac-toe',
+        name: 'Orca-Riptide',
       }}
     >
       <Body />
