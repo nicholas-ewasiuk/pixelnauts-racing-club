@@ -1,8 +1,9 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 
 export const Canvas: React.FC = () => {
-  const [counter, setCounter] = useState<number>(0);
-  const [ move, setMove ] = useState<number>(0);
+  const [ playerX, setPlayerX ] = useState<number>(0);
+  const [ playerY, setPlayerY ] = useState<number>(0);
+  const [ playerRadius, setPlayerRadius ] = useState<number>(10);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [gameState, setGameState] = useState<number>(0);
 
@@ -18,11 +19,6 @@ export const Canvas: React.FC = () => {
       //Initial state
       let timerId: number;
       const canvas = canvasRef.current;
-
-      let mouseClicked = false;
-      const handleMouseClick = () => {
-        mouseClicked = !mouseClicked;
-      }
 
       let leftPressed = false;
       let rightPressed = false;
@@ -62,34 +58,47 @@ export const Canvas: React.FC = () => {
       document.addEventListener("keydown", keyDownHandler, false);
       document.addEventListener("keyup", keyUpHandler, false);
 
-      canvas.addEventListener("click", handleMouseClick);
-
       const ctx = canvas.getContext("2d");
 
       canvas.width = 600;
       canvas.height = 300;
 
-      let myCounter = counter;
+      let px = playerX;
+      let py = playerY;
+      let radius = playerRadius;
+      let speed = 3 
       
       //Game Loop
       const f = () => {
-        if (ctx) {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.font = '48px serif';
-        
-          if (mouseClicked) {
-            setCounter(x => x - 1);
-            myCounter -= 1;
-            ctx.fillText(`counter: ${myCounter}`, canvas.width/2, canvas.height/2);
-          } else {
-            setCounter(x => x + 1);
-            myCounter += 1;
-            ctx.fillText(`counter: ${myCounter}`, canvas.width/2, canvas.height/2);
-          }
-          if (rightPressed) {
-            setMove(x => x + 1);
-          }
+        if (!ctx) throw new Error("error, canvas 2d context not found");
+        //Logic
+        if (rightPressed) {
+          setPlayerX(x => x + speed);
+          px += speed;
         }
+        if (leftPressed) {
+          setPlayerX(x => x - speed);
+          px -= speed;
+        }
+        if (upPressed) {
+          setPlayerY(x => x - speed);
+          py -= speed;
+        }
+        if (downPressed) {
+          setPlayerY(x => x + speed);
+          py += speed;
+        }
+        //Rendering
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        console.clear();
+        console.log(`X: ${px}, Y: ${py}`);
+
+        ctx.beginPath();
+        ctx.arc(px, py, radius, 0, Math.PI*2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.closePath();
+
         timerId = requestAnimationFrame(f);
       }
 
@@ -113,11 +122,6 @@ export const Canvas: React.FC = () => {
       <button onClick={() => setIsPaused(!isPaused)}>
         {isPaused ? "Resume" : "Pause"}
       </button>
-      <button>
-        Reverse
-      </button>
-      <p>Counter: {counter}</p>
-      <p>Direction: {move}</p>
     </div>
   );
 }

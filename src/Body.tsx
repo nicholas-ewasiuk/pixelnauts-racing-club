@@ -5,6 +5,7 @@ import { ModdedWalletButton } from "./components/ModdedWalletButton";
 import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
 import { NFTGet } from "./NFTget";
 import { INFT } from "./helpers";
+import { Canvas } from "./components/Canvas";
 
 export const Body: React.FC = () => {
   const [ balance, setBalance ] = useState<number | null>(null);
@@ -43,6 +44,7 @@ export const Body: React.FC = () => {
       >
         Button for Testing!
       </button>
+      <Canvas />
     </AppWrapper>
   );
 };
@@ -54,5 +56,8 @@ const AppWrapper = styled.div`
 `;
 
 /*
-Displaying the orcas component --> NFT display that takes nfts, filters the orcanauts
+Displaying the orcas component 
+  NFT display that takes nfts, filters the orcanauts,
+  and user can select the one to use. Orca nfts display can be opened and closed,
+  and can set new orca in between games.
 */
