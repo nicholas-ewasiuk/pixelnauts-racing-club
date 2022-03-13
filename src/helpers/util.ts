@@ -24,15 +24,26 @@ export function okToFailSync(callback: any, args: any[], wantObject = false) {
 
 export function filterOrcanauts(nfts: INFT[]): INFT[] {
   const orcas = nfts.filter((nft) => {
-    const data = nft.metadataOnchain.data;
-    return data.symbol === "ORCANAUT";
+    return nft.metadataOnchain.data.symbol === "ORCANAUT";
   })
   return orcas;
 }
 
 export function pixelateOrcas(nfts: INFT[]) {
   const traits = nfts.map((nft) => {
-    return nft.metadataExternal.attributes
+    const { 
+      metadataExternal: 
+        { attributes: [
+          {value: bg}, 
+          {value: body}, 
+          {value: hats}, 
+          {value: mouth}, 
+          {value: eyes}, 
+          {value: accessory}
+        ] 
+      } 
+    } = nft;
+    return [bg, body, hats, mouth, eyes, accessory];
   });
   return traits;
 }

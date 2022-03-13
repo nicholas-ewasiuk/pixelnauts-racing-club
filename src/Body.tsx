@@ -32,7 +32,8 @@ export const Body: React.FC = () => {
   useEffect(() => {
     if (nfts) {
       const orcas = filterOrcanauts(nfts);
-      console.log(orcas);
+      const traits = pixelateOrcas(orcas);
+      console.log(traits);
     }
   }, [nfts]);
 
