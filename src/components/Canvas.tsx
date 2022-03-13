@@ -1,4 +1,5 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import defaults from "./defaults/pixelnaut-offsets.json";
 
 export const Canvas: React.FC = () => {
   const [ playerPx, setPlayerPx ] = useState<number>(0);

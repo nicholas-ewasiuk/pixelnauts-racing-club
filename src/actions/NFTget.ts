@@ -1,14 +1,13 @@
 import { PublicKey } from "@saberhq/solana-contrib";
-import { useSolana } from '@saberhq/use-solana';
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { 
   Metadata,
   MetadataData, 
 } from '@metaplex-foundation/mpl-token-metadata';
 import axios from 'axios';
-import { INFT } from './helpers';
-import { deserializeTokenAccount, deserializeTokenMint } from './helpers/spl-token';
-import { okToFailAsync } from './helpers/util';
+import { INFT } from '../helpers';
+import { deserializeTokenAccount, deserializeTokenMint } from '../helpers/spl-token';
+import { okToFailAsync } from '../helpers/util';
 import { Connection } from "@solana/web3.js";
 
 interface IToken {

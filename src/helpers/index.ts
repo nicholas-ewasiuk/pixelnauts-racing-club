@@ -14,3 +14,16 @@ export interface INFT {
   metadataExternal?: any; 
 }
 
+export interface SpriteSheet {
+  src: string;
+  image: HTMLImageElement;
+  width: number;
+  height: number;
+  offsetX: number;
+  offsetY: number;
+}
+
+export interface Traits {
+  trait_type: string;
+  value: string;
+}

@@ -1,4 +1,5 @@
 /* eslint-disable no-use-before-define */
+import { INFT, Traits } from ".";
 
 export async function okToFailAsync(callback: any, args: any[], wantObject = false) {
   try {
@@ -19,4 +20,19 @@ export function okToFailSync(callback: any, args: any[], wantObject = false) {
     console.log('Full error:', e);
     return wantObject ? {} : undefined;
   }
+}
+
+export function filterOrcanauts(nfts: INFT[]): INFT[] {
+  const orcas = nfts.filter((nft) => {
+    const data = nft.metadataOnchain.data;
+    return data.symbol === "ORCANAUT";
+  })
+  return orcas;
+}
+
+export function pixelateOrcas(nfts: INFT[]) {
+  const traits = nfts.map((nft) => {
+    return nft.metadataExternal.attributes
+  });
+  return traits;
 }

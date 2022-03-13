@@ -3,9 +3,10 @@ import React, { useCallback, useEffect, useState } from "react";
 import styled from '@emotion/styled';
 import { ModdedWalletButton } from "./components/ModdedWalletButton";
 import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
-import { NFTGet } from "./NFTget";
+import { NFTGet } from "./actions/NFTget";
 import { INFT } from "./helpers";
 import { Canvas } from "./components/Canvas";
+import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
 
 export const Body: React.FC = () => {
   const [ balance, setBalance ] = useState<number | null>(null);
@@ -24,8 +25,16 @@ export const Body: React.FC = () => {
   const handleClickTest = async () => {
     if(!wallet) throw Error("Wallet not connected");
     const nfts = await NFTGet(wallet.publicKey, connection);
+    console.log(nfts);
     setNFTs(nfts);
   }
+
+  useEffect(() => {
+    if (nfts) {
+      const orcas = filterOrcanauts(nfts);
+      console.log(orcas);
+    }
+  }, [nfts]);
 
   useEffect(() => {
     void refetchSOL();
