@@ -96,90 +96,115 @@ export const Canvas: React.FC = () => {
       let ground = canvas.height;
       let cleared = gateCleared;
       let lvlCounter = levelCounter;
-      
+
+      let renderFps = 120;
+      let renderStart = 0;
+      let renderFrameDuration = 1000/renderFps;
+
+      const simFps = 60;
+      let previous = 0; 
+      const simFrameDuration = 1000/simFps;
+      let lag = 0;
+
       //Game Loop
-      const f = () => {
-        if (!ctx) throw new Error("error, canvas 2d context not found");
+      timerId = requestAnimationFrame(draw);
 
-        // Player Logic
-        if (rightPressed) {
-          setPlayerPx(x => x + playerSpd);
-          player.px += playerSpd;
+      function draw(timestamp: number) {
+        timerId = requestAnimationFrame(draw);
+
+        if (!timestamp) {
+          timestamp = 0;
         }
-        if (leftPressed) {
-          setPlayerPx(x => x - playerSpd);
-          player.px -= playerSpd;
+        let elapsed = timestamp - previous;
+        if (elapsed > 1000) {
+          elapsed = simFrameDuration;
         }
-        if (upPressed) {
-          setPlayerPy(x => x - playerSpd);
-          player.py -= playerSpd;
-        }
-        if (downPressed) {
-          setPlayerPy(x => x + playerSpd);
-          player.py += playerSpd;
-        }
-        //Gate Logic
-        gate.px -= gateSpd;
-        setGatePx(gate.px);
-        if (gate.px < 0) {
-          if (cleared) {
-            gate.px = canvas.width;
-            gate.py = Math.random() * (canvas.height);
-            cleared = false;
-            setGatePx(gate.px);
-            setGatePy(gate.py);
-            setGateCleared(cleared);
-            if (lvlCounter > 10) {
-              lvlCounter = 0;
-              gateSpd += 1;
-              playerSpd += 1;
-              setLevelCounter(lvlCounter);
-              setGateSpeed(gateSpd);
-              setPlayerSpeed(playerSpd);
-            } else {
-              lvlCounter += 1;
-              setLevelCounter(lvlCounter);
-            }
-          } else {
-            console.log("Game Over");
+        lag += elapsed;
+
+        //Logic
+        while (lag >= simFrameDuration) {
+          // Player Logic
+          if (rightPressed) {
+            setPlayerPx(x => x + playerSpd);
+            player.px += playerSpd;
           }
-        }
-
-
-        //Collisions
-        let deltaPx = player.px - gate.px;
-        let deltaPy = player.py - gate.py;
-        let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
-        let minPsq = (gate.radius + player.radius) * (gate.radius + player.radius);
-        if (player.py > ground-player.radius) {
-          player.py = ground-player.radius;
-        }
-        if (deltaPsq < minPsq) {
-          cleared = true;
-          setGateCleared(cleared);
+          if (leftPressed) {
+            setPlayerPx(x => x - playerSpd);
+            player.px -= playerSpd;
+          }
+          if (upPressed) {
+            setPlayerPy(x => x - playerSpd);
+            player.py -= playerSpd;
+          }
+          if (downPressed) {
+            setPlayerPy(x => x + playerSpd);
+            player.py += playerSpd;
+          }
+          //Gate Logic
+          gate.px -= gateSpd;
+          setGatePx(gate.px);
+          if (gate.px < 0) {
+            if (cleared) {
+              gate.px = canvas.width;
+              gate.py = Math.random() * (canvas.height);
+              cleared = false;
+              setGatePx(gate.px);
+              setGatePy(gate.py);
+              setGateCleared(cleared);
+              if (lvlCounter > 10) {
+                lvlCounter = 0;
+                gateSpd += 1;
+                playerSpd += 1;
+                setLevelCounter(lvlCounter);
+                setGateSpeed(gateSpd);
+                setPlayerSpeed(playerSpd);
+              } else {
+                lvlCounter += 1;
+                setLevelCounter(lvlCounter);
+              }
+            } else {
+              console.log("Game Over");
+            }
+          }
+          //Collisions
+          let deltaPx = player.px - gate.px;
+          let deltaPy = player.py - gate.py;
+          let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
+          let minPsq = (gate.radius + player.radius) * (gate.radius + player.radius);
+          if (player.py > ground-player.radius) {
+            player.py = ground-player.radius;
+          }
+          if (deltaPsq < minPsq) {
+            cleared = true;
+            setGateCleared(cleared);
+          }
+          lag -= simFrameDuration;
         }
 
         //Rendering
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        console.clear();
-        console.log(`X: ${player.px}, Y: ${player.py}, level: ${lvlCounter}`);
+        let lagOffset = lag / simFrameDuration;
+        if (timestamp >= renderStart) {
+          if (!ctx) throw new Error("error, canvas 2d context not found");
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          console.clear();
+          console.log(`X: ${player.px}, Y: ${player.py}, level: ${lvlCounter}`);
 
-        ctx.beginPath();
-        ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
-        ctx.fillStyle = "#ffffff";
-        ctx.fill();
-        ctx.closePath();
+          ctx.beginPath();
+          ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
+          ctx.fillStyle = "#ffffff";
+          ctx.fill();
+          ctx.closePath();
 
-        ctx.beginPath();
-        ctx.arc(gate.px, gate.py, gate.radius, 0, Math.PI*2);
-        ctx.fillStyle = "#e75569";
-        ctx.fill();
-        ctx.closePath();
-
-        timerId = requestAnimationFrame(f);
+          ctx.beginPath();
+          ctx.arc(gate.px, gate.py, gate.radius, 0, Math.PI*2);
+          ctx.fillStyle = "#e75569";
+          ctx.fill();
+          ctx.closePath();
+          
+          renderStart = timestamp + renderFrameDuration;
+        }
+        previous = timestamp;
       }
-
-      timerId = requestAnimationFrame(f);
     
       //Cleanup function triggers when useLayoutEffect is called again.
       return () => cancelAnimationFrame(timerId);
