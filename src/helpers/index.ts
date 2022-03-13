@@ -13,3 +13,4 @@ export interface INFT {
   metadataOnchain: MetadataData;
   metadataExternal?: any; 
 }
+

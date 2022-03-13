@@ -1,15 +1,29 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 
 export const Canvas: React.FC = () => {
-  const [ playerX, setPlayerX ] = useState<number>(0);
-  const [ playerY, setPlayerY ] = useState<number>(0);
+  const [ playerPx, setPlayerPx ] = useState<number>(0);
+  const [ playerPy, setPlayerPy ] = useState<number>(0);
   const [ playerRadius, setPlayerRadius ] = useState<number>(10);
-  const [isPaused, setIsPaused] = useState<boolean>(false);
-  const [gameState, setGameState] = useState<number>(0);
+  const [ playerSpeed, setPlayerSpeed ] = useState<number>(3);
+  const [ gatePx, setGatePx] = useState<number>(600);
+  const [ gatePy, setGatePy] = useState<number>(0);
+  const [ gateRadius, setGateRadius ] = useState<number>(10);
+  const [ gateSpeed, setGateSpeed ] = useState<number>(5);
+  const [ gateCleared, setGateCleared ] = useState<boolean>(true);
+  const [ levelCounter, setLevelCounter ] = useState<number>(0);
+  const [ isPaused, setIsPaused ] = useState<boolean>(false);
+  const [ gameState, setGameState ] = useState<number>(0);
 
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
+
+  interface CircleCollider {
+    px: number; 
+    py: number; 
+    radius: number;
+    id: string;
+  }
 
   //animation loop structure 
   //https://blog.jakuba.net/request-animation-frame-and-use-effect-vs-use-layout-effect/
@@ -63,39 +77,102 @@ export const Canvas: React.FC = () => {
       canvas.width = 600;
       canvas.height = 300;
 
-      let px = playerX;
-      let py = playerY;
-      let radius = playerRadius;
-      let speed = 3 
+      const player: CircleCollider = {
+        px: playerPx,
+        py: playerPy,
+        radius: playerRadius,
+        id: "playerOne",
+      };
+
+      const gate: CircleCollider = {
+        px: gatePx,
+        py: gatePy,
+        radius: gateRadius,
+        id: "gate",
+      }
+
+      let playerSpd = playerSpeed; 
+      let gateSpd = gateSpeed;
+      let ground = canvas.height;
+      let cleared = gateCleared;
+      let lvlCounter = levelCounter;
       
       //Game Loop
       const f = () => {
         if (!ctx) throw new Error("error, canvas 2d context not found");
-        //Logic
+
+        // Player Logic
         if (rightPressed) {
-          setPlayerX(x => x + speed);
-          px += speed;
+          setPlayerPx(x => x + playerSpd);
+          player.px += playerSpd;
         }
         if (leftPressed) {
-          setPlayerX(x => x - speed);
-          px -= speed;
+          setPlayerPx(x => x - playerSpd);
+          player.px -= playerSpd;
         }
         if (upPressed) {
-          setPlayerY(x => x - speed);
-          py -= speed;
+          setPlayerPy(x => x - playerSpd);
+          player.py -= playerSpd;
         }
         if (downPressed) {
-          setPlayerY(x => x + speed);
-          py += speed;
+          setPlayerPy(x => x + playerSpd);
+          player.py += playerSpd;
         }
+        //Gate Logic
+        gate.px -= gateSpd;
+        setGatePx(gate.px);
+        if (gate.px < 0) {
+          if (cleared) {
+            gate.px = canvas.width;
+            gate.py = Math.random() * (canvas.height);
+            cleared = false;
+            setGatePx(gate.px);
+            setGatePy(gate.py);
+            setGateCleared(cleared);
+            if (lvlCounter > 10) {
+              lvlCounter = 0;
+              gateSpd += 1;
+              playerSpd += 1;
+              setLevelCounter(lvlCounter);
+              setGateSpeed(gateSpd);
+              setPlayerSpeed(playerSpd);
+            } else {
+              lvlCounter += 1;
+              setLevelCounter(lvlCounter);
+            }
+          } else {
+            console.log("Game Over");
+          }
+        }
+
+
+        //Collisions
+        let deltaPx = player.px - gate.px;
+        let deltaPy = player.py - gate.py;
+        let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
+        let minPsq = (gate.radius + player.radius) * (gate.radius + player.radius);
+        if (player.py > ground-player.radius) {
+          player.py = ground-player.radius;
+        }
+        if (deltaPsq < minPsq) {
+          cleared = true;
+          setGateCleared(cleared);
+        }
+
         //Rendering
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         console.clear();
-        console.log(`X: ${px}, Y: ${py}`);
+        console.log(`X: ${player.px}, Y: ${player.py}, level: ${lvlCounter}`);
 
         ctx.beginPath();
-        ctx.arc(px, py, radius, 0, Math.PI*2);
+        ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
         ctx.fillStyle = "#ffffff";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(gate.px, gate.py, gate.radius, 0, Math.PI*2);
+        ctx.fillStyle = "#e75569";
         ctx.fill();
         ctx.closePath();
 
@@ -117,10 +194,17 @@ export const Canvas: React.FC = () => {
       <button 
         disabled={gameState == 1}
         onClick={() => setGameState(1)}
-      >Play
+      >
+        Play
       </button>
       <button onClick={() => setIsPaused(!isPaused)}>
         {isPaused ? "Resume" : "Pause"}
+      </button>
+      <button 
+        disabled={!isPaused}
+        onClick={() => {setGatePx(600); setGateSpeed(5);}}
+      >
+        Restart
       </button>
     </div>
   );

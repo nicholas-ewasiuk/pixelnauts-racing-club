@@ -61,3 +61,9 @@ Displaying the orcas component
   and user can select the one to use. Orca nfts display can be opened and closed,
   and can set new orca in between games.
 */
+/*
+  Attributions todo:
+    ilmoi - NFT fetching code example
+    javidx9 - collisions game logic frame rate limits etc
+    pixelnauts - artwork
+*/
