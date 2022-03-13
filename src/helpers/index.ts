@@ -22,8 +22,3 @@ export interface SpriteSheet {
   offsetX: number;
   offsetY: number;
 }
-
-export interface Traits {
-  trait_type: string;
-  value: string;
-}

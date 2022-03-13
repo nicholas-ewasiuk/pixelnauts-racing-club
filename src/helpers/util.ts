@@ -1,5 +1,7 @@
 /* eslint-disable no-use-before-define */
-import { INFT, Traits } from ".";
+import { INFT } from ".";
+import { SpriteSheet } from ".";
+
 
 export async function okToFailAsync(callback: any, args: any[], wantObject = false) {
   try {
@@ -23,14 +25,13 @@ export function okToFailSync(callback: any, args: any[], wantObject = false) {
 }
 
 export function filterOrcanauts(nfts: INFT[]): INFT[] {
-  const orcas = nfts.filter((nft) => {
+  return nfts.filter((nft) => {
     return nft.metadataOnchain.data.symbol === "ORCANAUT";
   })
-  return orcas;
 }
 
 export function pixelateOrcas(nfts: INFT[]) {
-  const traits = nfts.map((nft) => {
+  return nfts.map((nft) => {
     const { 
       metadataExternal: 
         { attributes: [
@@ -43,7 +44,12 @@ export function pixelateOrcas(nfts: INFT[]) {
         ] 
       } 
     } = nft;
-    return [bg, body, hats, mouth, eyes, accessory];
+    return [bg, body, hats, mouth, eyes, accessory]
+      .map((item) => {
+        return item.toLowerCase()
+          .replace('-',' ')
+          .replace(',','')
+          .replace(' ','_');
+    })
   });
-  return traits;
 }

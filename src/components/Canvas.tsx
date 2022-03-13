@@ -1,4 +1,7 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import { SpriteSheet } from '../helpers';
+import body from '../assets/pixelnauts/body';
+import eyes from '../assets/pixelnauts/eyes';
 import defaults from "./defaults/pixelnaut-offsets.json";
 
 export const Canvas: React.FC = () => {
@@ -24,6 +27,15 @@ export const Canvas: React.FC = () => {
     py: number; 
     radius: number;
     id: string;
+  }
+
+  function mapImages(paths) {
+    const images = paths.map((path) => {
+      const image = new Image();
+      image.src = path;
+      return image;
+    })
+    return images;
   }
 
   //animation loop structure 
@@ -106,6 +118,9 @@ export const Canvas: React.FC = () => {
       let previous = 0; 
       const simFrameDuration = 1000/simFps;
       let lag = 0;
+
+      const playerSprite = new Image();
+      playerSprite.src = body.blue;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -201,6 +216,12 @@ export const Canvas: React.FC = () => {
           ctx.fillStyle = "#e75569";
           ctx.fill();
           ctx.closePath();
+
+          ctx.drawImage(
+            playerSprite,
+            canvas.width/2,
+            canvas.height/2
+          );
           
           renderStart = timestamp + renderFrameDuration;
         }
