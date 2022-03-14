@@ -33,6 +33,7 @@ export const Body: React.FC = () => {
     if (nfts) {
       const orcas = filterOrcanauts(nfts);
       const traits = pixelateOrcas(orcas);
+      console.log(traits[0])
       setMyOrca(traits[0]);
     }
   }, [nfts]);
@@ -54,7 +55,9 @@ export const Body: React.FC = () => {
       >
         Button for Testing!
       </button>
-      <Canvas orca={myOrca}/>
+      { myOrca &&
+        <Canvas orca={myOrca}/>
+      }
     </AppWrapper>
   );
 };
@@ -76,4 +79,5 @@ Displaying the orcas component
     ilmoi - NFT fetching code example
     javidx9 - collisions game logic frame rate limits etc
     pixelnauts - artwork
+    franks labratory - "How to make a Game with Javascript and HTML Canvas"
 */

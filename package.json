@@ -1,7 +1,7 @@
 {
-  "name": "riptide-orca",
+  "name": "pixelnauts-racing-club",
   "version": "1.0.0",
-  "description": "Orcanaut game for the Riptide Hackathon",
+  "description": "Pixelnauts racing game for the Riptide Hackathon",
   "source": "src/index.html",
   "author": "nicholas-ewasiuk <ewasiuk.nick@gmail.com>",
   "license": "GPL-3.0",

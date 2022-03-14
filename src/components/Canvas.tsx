@@ -6,8 +6,6 @@ import body from '../assets/pixelnauts/body';
 import eyes from '../assets/pixelnauts/eyes';
 import hat from '../assets/pixelnauts/hat';
 import mouth from '../assets/pixelnauts/mouth';
-import defaults from "./defaults/pixelnaut-offsets.json";
-import { Offsets } from './defaults/offsets';
 
 type Props = {
   orca: string[];
@@ -37,18 +35,7 @@ export const Canvas = ({ orca }: Props) => {
     radius: number;
     id: string;
   }
-
-  function mapImages(paths) {
-    const images = paths.map((path) => {
-      const image = new Image();
-      image.src = path;
-      return image;
-    })
-    return images;
-  }
-
   
-
   //animation loop structure 
   //https://blog.jakuba.net/request-animation-frame-and-use-effect-vs-use-layout-effect/
   useLayoutEffect(() => {
@@ -131,6 +118,7 @@ export const Canvas = ({ orca }: Props) => {
       const simFrameDuration = 1000/simFps;
       let lag = 0;
 
+      //Create the images from the selected orcanaut.
       const [
         sBg,
         sBody,
@@ -144,10 +132,17 @@ export const Canvas = ({ orca }: Props) => {
       const Hat = new Image();
       const Mouth = new Image();
       const Eyes = new Image();
+      //const Accessory = new Image();
+
       Body.src = body[sBody];
       Hat.src = hat[sHat];
       Mouth.src = mouth[sMouth];
       Eyes.src = eyes[sEyes];
+      //Accessory.src = accessory[sAccessory];
+      //Need Error handling for "none" condition.
+
+      const spriteOffsetX = 24;
+      const spriteOffsetY = 25;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -230,11 +225,13 @@ export const Canvas = ({ orca }: Props) => {
           if (!ctx) throw new Error("error, canvas 2d context not found");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+          /* draw player collider
           ctx.beginPath();
           ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
           ctx.fillStyle = "#ffffff";
           ctx.fill();
           ctx.closePath();
+          */
 
           ctx.beginPath();
           ctx.arc(gate.px, gate.py, gate.radius, 0, Math.PI*2);
@@ -248,8 +245,8 @@ export const Canvas = ({ orca }: Props) => {
             0,
             32,
             19,
-            player.px + 2,
-            player.py + 16,
+            player.px + 2 - spriteOffsetX,
+            player.py + 16 - spriteOffsetY,
             32,
             19
           );
@@ -259,8 +256,8 @@ export const Canvas = ({ orca }: Props) => {
             0,
             24,
             32,
-            player.px + 12,
-            player.py + 4,
+            player.px + 12 - spriteOffsetX,
+            player.py + 4 - spriteOffsetY,
             24,
             32
           );
@@ -270,8 +267,8 @@ export const Canvas = ({ orca }: Props) => {
             0,
             28,
             20,
-            player.px + 8,
-            player.py + 16,
+            player.px + 8 - spriteOffsetX,
+            player.py + 16 - spriteOffsetY,
             28,
             20
           );
@@ -281,11 +278,25 @@ export const Canvas = ({ orca }: Props) => {
             0,
             28,
             36,
-            player.px + 8,
-            player.py + 4,
+            player.px + 8 - spriteOffsetX,
+            player.py + 4 - spriteOffsetY,
             28,
             36
           );
+          
+          /* fix beach ball bug
+          ctx.drawImage(
+            Accessory,
+            0,
+            0,
+            40,
+            40,
+            player.px - spriteOffsetX,
+            player.py - spriteOffsetY,
+            40,
+            40
+          );
+          */
           
           renderStart = timestamp + renderFrameDuration;
         }
