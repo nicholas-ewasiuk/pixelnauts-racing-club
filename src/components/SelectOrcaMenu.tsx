@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
@@ -20,8 +21,8 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
       let timerId: number;
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
-      canvas.width = 600;
-      canvas.height = 300;
+      canvas.width = 160;
+      canvas.height = 160;
 
       let renderFps = 120;
       let renderStart = 0;
@@ -58,8 +59,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
       //Need Error handling for "none" condition. 
       //okay just used the holiday items as placeholder for now.
 
-      const spriteOffsetX = 24;
-      const spriteOffsetY = 25;
+      const imgScale = 4;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -88,6 +88,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
         if (timestamp >= renderStart) {
           if (!ctx) throw new Error("error, canvas 2d context not found");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.imageSmoothingEnabled = false;
 
           ctx.drawImage(
             Background,
@@ -95,10 +96,10 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             0,
             40,
             40,
-            150 - spriteOffsetX,
-            150 - spriteOffsetY,
-            40,
-            40
+            0 + imgScale,
+            0 + imgScale,
+            40 * imgScale,
+            40 * imgScale
           )
           ctx.drawImage(
             Body,
@@ -106,10 +107,10 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             0,
             32,
             19,
-            150 + 2 - spriteOffsetX,
-            150 + 16 - spriteOffsetY,
-            32,
-            19
+            0 + 2 * imgScale,
+            0 + 16 * imgScale,
+            32 * imgScale,
+            19 * imgScale
           );
           ctx.drawImage(
             Eyes,
@@ -117,10 +118,10 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             0,
             24,
             32,
-            150 + 12 - spriteOffsetX,
-            150 + 4 - spriteOffsetY,
-            24,
-            32
+            0 + 12 * imgScale,
+            0 + 4 * imgScale,
+            24 * imgScale,
+            32 * imgScale
           );
           ctx.drawImage(
             Mouth,
@@ -128,10 +129,10 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             0,
             28,
             20,
-            150 + 8 - spriteOffsetX,
-            150 + 16 - spriteOffsetY,
-            28,
-            20
+            0 + 8 * imgScale,
+            0 + 16 * imgScale,
+            28 * imgScale,
+            20 * imgScale
           );
           ctx.drawImage(
             Hat,
@@ -139,10 +140,10 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             0,
             28,
             36,
-            150 + 8 - spriteOffsetX,
-            150 + 4 - spriteOffsetY,
-            28,
-            36
+            0 + 8 * imgScale,
+            0 + 4 * imgScale,
+            28 * imgScale,
+            36 * imgScale
           );
           ctx.drawImage(
             Accessory,
@@ -150,10 +151,10 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             0,
             40,
             40,
-            150 - spriteOffsetX,
-            150 - spriteOffsetY,
-            40,
-            40
+            0 + imgScale,
+            0 + imgScale,
+            40 * imgScale,
+            40 * imgScale
           );
         
           renderStart = timestamp + renderFrameDuration;

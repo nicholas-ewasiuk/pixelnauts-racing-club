@@ -13,7 +13,7 @@ type Props = {
 export const GameCanvas = ({ orca }: Props) => {
   const [ playerPx, setPlayerPx ] = useState<number>(0);
   const [ playerPy, setPlayerPy ] = useState<number>(0);
-  const [ playerRadius, setPlayerRadius ] = useState<number>(10);
+  const [ playerRadius, setPlayerRadius ] = useState<number>(20);
   const [ playerSpeed, setPlayerSpeed ] = useState<number>(3);
   const [ gatePx, setGatePx] = useState<number>(600);
   const [ gatePy, setGatePy] = useState<number>(0);
@@ -141,6 +141,7 @@ export const GameCanvas = ({ orca }: Props) => {
 
       const spriteOffsetX = 24;
       const spriteOffsetY = 25;
+      const imgScale = 2;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -222,11 +223,11 @@ export const GameCanvas = ({ orca }: Props) => {
         if (timestamp >= renderStart) {
           if (!ctx) throw new Error("error, canvas 2d context not found");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+          ctx.imageSmoothingEnabled = false;
           /* draw player collider
           ctx.beginPath();
           ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
-          ctx.fillStyle = "#ffffff";
+          ctx.fillStyle = "#000000";
           ctx.fill();
           ctx.closePath();
           */
@@ -243,10 +244,10 @@ export const GameCanvas = ({ orca }: Props) => {
             0,
             32,
             19,
-            player.px + 2 - spriteOffsetX,
-            player.py + 16 - spriteOffsetY,
-            32,
-            19
+            player.px + (2 - spriteOffsetX) * imgScale,
+            player.py + (16 - spriteOffsetY) * imgScale,
+            32 * imgScale,
+            19 * imgScale
           );
           ctx.drawImage(
             Eyes,
@@ -254,10 +255,10 @@ export const GameCanvas = ({ orca }: Props) => {
             0,
             24,
             32,
-            player.px + 12 - spriteOffsetX,
-            player.py + 4 - spriteOffsetY,
-            24,
-            32
+            player.px + (12 - spriteOffsetX) * imgScale,
+            player.py + (4 - spriteOffsetY) * imgScale,
+            24 * imgScale,
+            32 * imgScale
           );
           ctx.drawImage(
             Mouth,
@@ -265,10 +266,10 @@ export const GameCanvas = ({ orca }: Props) => {
             0,
             28,
             20,
-            player.px + 8 - spriteOffsetX,
-            player.py + 16 - spriteOffsetY,
-            28,
-            20
+            player.px + (8 - spriteOffsetX) * imgScale,
+            player.py + (16 - spriteOffsetY) * imgScale,
+            28 * imgScale,
+            20 * imgScale
           );
           ctx.drawImage(
             Hat,
@@ -276,10 +277,10 @@ export const GameCanvas = ({ orca }: Props) => {
             0,
             28,
             36,
-            player.px + 8 - spriteOffsetX,
-            player.py + 4 - spriteOffsetY,
-            28,
-            36
+            player.px + (8 - spriteOffsetX) * imgScale,
+            player.py + (4 - spriteOffsetY) * imgScale,
+            28 * imgScale,
+            36 * imgScale
           );
           ctx.drawImage(
             Accessory,
@@ -287,10 +288,10 @@ export const GameCanvas = ({ orca }: Props) => {
             0,
             40,
             40,
-            player.px - spriteOffsetX,
-            player.py - spriteOffsetY,
-            40,
-            40
+            player.px - spriteOffsetX * imgScale,
+            player.py - spriteOffsetY * imgScale,
+            40 * imgScale,
+            40 * imgScale
           );
           
           renderStart = timestamp + renderFrameDuration;
