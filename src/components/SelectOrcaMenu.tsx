@@ -19,9 +19,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
       //Initial state
       let timerId: number;
       const canvas = canvasRef.current;
-
       const ctx = canvas.getContext("2d");
-
       canvas.width = 600;
       canvas.height = 300;
 
@@ -44,18 +42,21 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
         sAccessory
       ] = orca;
 
+      const Background = new Image();
       const Body = new Image();
-      //const Hat = new Image();
+      const Hat = new Image();
       const Mouth = new Image();
       const Eyes = new Image();
-      //const Accessory = new Image();
+      const Accessory = new Image();
 
+      Background.src = background[sBg];
       Body.src = body[sBody];
-      //Hat.src = hat[sHat];
+      Hat.src = hat[sHat];
       Mouth.src = mouth[sMouth];
       Eyes.src = eyes[sEyes];
-      //Accessory.src = accessory[sAccessory];
-      //Need Error handling for "none" condition.
+      Accessory.src = accessory[sAccessory];
+      //Need Error handling for "none" condition. 
+      //okay just used the holiday items as placeholder for now.
 
       const spriteOffsetX = 24;
       const spriteOffsetY = 25;
@@ -77,7 +78,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
 
         //Logic
         while (lag >= simFrameDuration) {
-          // Player Logic
+          //Animation Logic
 
           lag -= simFrameDuration;
         }
@@ -88,6 +89,17 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
           if (!ctx) throw new Error("error, canvas 2d context not found");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+          ctx.drawImage(
+            Background,
+            0,
+            0,
+            40,
+            40,
+            150 - spriteOffsetX,
+            150 - spriteOffsetY,
+            40,
+            40
+          )
           ctx.drawImage(
             Body,
             0,
@@ -121,33 +133,28 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             28,
             20
           );
-          /*
           ctx.drawImage(
             Hat,
             0,
             0,
             28,
             36,
-            8 - spriteOffsetX,
-            4 - spriteOffsetY,
+            150 + 8 - spriteOffsetX,
+            150 + 4 - spriteOffsetY,
             28,
             36
           );
-          */
-        
-          /* fix beach ball bug
           ctx.drawImage(
             Accessory,
             0,
             0,
             40,
             40,
-            player.px - spriteOffsetX,
-            player.py - spriteOffsetY,
+            150 - spriteOffsetX,
+            150 - spriteOffsetY,
             40,
             40
           );
-          */
         
           renderStart = timestamp + renderFrameDuration;
         }

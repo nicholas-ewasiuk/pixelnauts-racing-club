@@ -47,9 +47,9 @@ export function pixelateOrcas(nfts: INFT[]) {
     return [bg, body, hats, mouth, eyes, accessory]
       .map((item) => {
         return item.toLowerCase()
-          .replace('-',' ')
-          .replace(',','')
-          .replace(' ','_');
+          .replaceAll('-',' ')
+          .replaceAll(',','')
+          .replaceAll(' ','_');
     })
   });
 }

@@ -42,6 +42,7 @@ export const Body: React.FC = () => {
       const orcaMetadata = filterOrcanauts(nfts);
       const orcas = pixelateOrcas(orcaMetadata);
       setOrcas(orcas);
+      console.log(orcas);
     }
   }, [wallet]);
 

@@ -7,6 +7,7 @@ import bucket_cap from './hat-bucket_hat.png';
 import flower from './hat-flower.png';
 import marinade_chef_hat from './hat-marinade_chef_hat.png';
 import ninja_hood from './hat-ninja_hood.png';
+import none from './hat-none.png';
 import pirate_hat from './hat-pirate_hat.png';
 import santa_hat from './hat-santa_hat.png';
 
@@ -20,6 +21,7 @@ const hat = {
   flower,
   marinade_chef_hat,
   ninja_hood,
+  none,
   pirate_hat,
   santa_hat
 };

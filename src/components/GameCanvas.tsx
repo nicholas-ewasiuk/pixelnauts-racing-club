@@ -131,14 +131,13 @@ export const GameCanvas = ({ orca }: Props) => {
       const Hat = new Image();
       const Mouth = new Image();
       const Eyes = new Image();
-      //const Accessory = new Image();
+      const Accessory = new Image();
 
       Body.src = body[sBody];
       Hat.src = hat[sHat];
       Mouth.src = mouth[sMouth];
       Eyes.src = eyes[sEyes];
-      //Accessory.src = accessory[sAccessory];
-      //Need Error handling for "none" condition.
+      Accessory.src = accessory[sAccessory];
 
       const spriteOffsetX = 24;
       const spriteOffsetY = 25;
@@ -282,8 +281,6 @@ export const GameCanvas = ({ orca }: Props) => {
             28,
             36
           );
-          
-          /* fix beach ball bug
           ctx.drawImage(
             Accessory,
             0,
@@ -295,7 +292,6 @@ export const GameCanvas = ({ orca }: Props) => {
             40,
             40
           );
-          */
           
           renderStart = timestamp + renderFrameDuration;
         }

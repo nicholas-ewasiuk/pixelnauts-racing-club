@@ -13,12 +13,3 @@ export interface INFT {
   metadataOnchain: MetadataData;
   metadataExternal?: any; 
 }
-
-export interface SpriteSheet {
-  src: string;
-  image: HTMLImageElement;
-  width: number;
-  height: number;
-  offsetX: number;
-  offsetY: number;
-}
