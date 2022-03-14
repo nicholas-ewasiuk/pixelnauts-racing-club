@@ -11,7 +11,7 @@ import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
 export const Body: React.FC = () => {
   const [ balance, setBalance ] = useState<number | null>(null);
   const [ nfts, setNFTs ] = useState<INFT[] | null >(null);
-  const [ myOrca, setMyOrca ] = useState<INFT | null>(null);
+  const [ myOrca, setMyOrca ] = useState<string[] | null>(null);
 
   const { providerMut, connection, network, setNetwork } = useSolana();
   const wallet = useConnectedWallet();
@@ -33,7 +33,7 @@ export const Body: React.FC = () => {
     if (nfts) {
       const orcas = filterOrcanauts(nfts);
       const traits = pixelateOrcas(orcas);
-      console.log(traits);
+      setMyOrca(traits[0]);
     }
   }, [nfts]);
 
@@ -54,7 +54,7 @@ export const Body: React.FC = () => {
       >
         Button for Testing!
       </button>
-      <Canvas />
+      <Canvas orca={myOrca}/>
     </AppWrapper>
   );
 };

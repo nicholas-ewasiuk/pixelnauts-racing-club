@@ -4,7 +4,15 @@ import orca from './body-orca.png';
 import pink from './body-pink.png';
 import yellow from './body-yellow.png';
 
-const body = {
+interface Body {
+  blue: string,
+  holographic: string,
+  orca: string,
+  pink: string,
+  yellow: string
+}
+
+const body: Body = {
   blue,
   holographic,
   orca,

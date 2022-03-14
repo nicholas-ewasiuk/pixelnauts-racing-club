@@ -1,11 +1,19 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { SpriteSheet } from '../helpers';
+import accessory from '../assets/pixelnauts/accessory';
+import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
 import eyes from '../assets/pixelnauts/eyes';
 import hat from '../assets/pixelnauts/hat';
+import mouth from '../assets/pixelnauts/mouth';
 import defaults from "./defaults/pixelnaut-offsets.json";
+import { Offsets } from './defaults/offsets';
 
-export const Canvas: React.FC = () => {
+type Props = {
+  orca: string[];
+}
+
+export const Canvas = ({ orca }: Props) => {
   const [ playerPx, setPlayerPx ] = useState<number>(0);
   const [ playerPy, setPlayerPy ] = useState<number>(0);
   const [ playerRadius, setPlayerRadius ] = useState<number>(10);
@@ -39,10 +47,13 @@ export const Canvas: React.FC = () => {
     return images;
   }
 
+  
+
   //animation loop structure 
   //https://blog.jakuba.net/request-animation-frame-and-use-effect-vs-use-layout-effect/
   useLayoutEffect(() => {
     if (!isPaused && canvasRef.current && gameState) {
+      console.log(orca);
       
       //Initial state
       let timerId: number;
@@ -120,12 +131,23 @@ export const Canvas: React.FC = () => {
       const simFrameDuration = 1000/simFps;
       let lag = 0;
 
+      const [
+        sBg,
+        sBody,
+        sHat,
+        sMouth,
+        sEyes,
+        sAccessory
+      ] = orca;
+
       const Body = new Image();
-      Body.src = body.holographic;
-      const Eyes = new Image();
-      Eyes.src = eyes.aviator_sunglasses;
       const Hat = new Image();
-      Hat.src = hat.astronaut_helmet;
+      const Mouth = new Image();
+      const Eyes = new Image();
+      Body.src = body[sBody];
+      Hat.src = hat[sHat];
+      Mouth.src = mouth[sMouth];
+      Eyes.src = eyes[sEyes];
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -207,8 +229,6 @@ export const Canvas: React.FC = () => {
         if (timestamp >= renderStart) {
           if (!ctx) throw new Error("error, canvas 2d context not found");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          console.clear();
-          console.log(`X: ${player.px}, Y: ${player.py}, level: ${lvlCounter}`);
 
           ctx.beginPath();
           ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
@@ -243,6 +263,17 @@ export const Canvas: React.FC = () => {
             player.py + 4,
             24,
             32
+          );
+          ctx.drawImage(
+            Mouth,
+            0,
+            0,
+            28,
+            20,
+            player.px + 8,
+            player.py + 16,
+            28,
+            20
           );
           ctx.drawImage(
             Hat,
