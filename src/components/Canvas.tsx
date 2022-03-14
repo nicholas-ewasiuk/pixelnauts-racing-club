@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useRef, useState } from 'react';
 import { SpriteSheet } from '../helpers';
 import body from '../assets/pixelnauts/body';
 import eyes from '../assets/pixelnauts/eyes';
+import hat from '../assets/pixelnauts/hat';
 import defaults from "./defaults/pixelnaut-offsets.json";
 
 export const Canvas: React.FC = () => {
@@ -119,8 +120,12 @@ export const Canvas: React.FC = () => {
       const simFrameDuration = 1000/simFps;
       let lag = 0;
 
-      const playerSprite = new Image();
-      playerSprite.src = body.blue;
+      const Body = new Image();
+      Body.src = body.holographic;
+      const Eyes = new Image();
+      Eyes.src = eyes.aviator_sunglasses;
+      const Hat = new Image();
+      Hat.src = hat.astronaut_helmet;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -218,9 +223,37 @@ export const Canvas: React.FC = () => {
           ctx.closePath();
 
           ctx.drawImage(
-            playerSprite,
-            canvas.width/2,
-            canvas.height/2
+            Body,
+            0,
+            0,
+            32,
+            19,
+            player.px + 2,
+            player.py + 16,
+            32,
+            19
+          );
+          ctx.drawImage(
+            Eyes,
+            0,
+            0,
+            24,
+            32,
+            player.px + 12,
+            player.py + 4,
+            24,
+            32
+          );
+          ctx.drawImage(
+            Hat,
+            0,
+            0,
+            28,
+            36,
+            player.px + 8,
+            player.py + 4,
+            28,
+            36
           );
           
           renderStart = timestamp + renderFrameDuration;

@@ -1,14 +1,14 @@
-import aviator_sunglasses from './aviator_sunglasses.png';
-import basic from './basic.png';
-import droopy from './droopy.png';
-import glittery from './glittery.png';
-import happy from './happy.png';
-import mischevous from './mischevous.png';
-import rudolph from './rudolph.png';
-import side_eye from './side_eye.png';
-import sleepy from './sleepy.png';
-import socn_snorkel from './socn_snorkel.png';
-import sol_sunglasses from './sol_sunglasses.png';
+import aviator_sunglasses from './eyes-aviator_sunglasses.png';
+import basic from './eyes-basic.png';
+import droopy from './eyes-droopy.png';
+import glittery from './eyes-glittery.png';
+import happy from './eyes-happy.png';
+import mischevous from './eyes-mischevous.png';
+import rudolph from './eyes-rudolph.png';
+import side_eye from './eyes-side_eye.png';
+import sleepy from './eyes-sleepy.png';
+import socn_snorkel from './eyes-socn_snorkel.png';
+import sol_sunglasses from './eyes-sol_sunglasses.png';
 
 const eyes = {
   aviator_sunglasses,
