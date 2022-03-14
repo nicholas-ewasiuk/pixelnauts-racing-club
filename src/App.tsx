@@ -20,7 +20,7 @@ const App: React.FC = () => {
     <WalletKitProvider
       defaultNetwork='mainnet-beta'
       app={{
-        name: 'Orca-Riptide',
+        name: 'Pixelnauts Racing Club',
       }}
     >
       <Body />

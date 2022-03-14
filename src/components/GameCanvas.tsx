@@ -1,5 +1,4 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { SpriteSheet } from '../helpers';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
@@ -11,7 +10,7 @@ type Props = {
   orca: string[];
 }
 
-export const Canvas = ({ orca }: Props) => {
+export const GameCanvas = ({ orca }: Props) => {
   const [ playerPx, setPlayerPx ] = useState<number>(0);
   const [ playerPy, setPlayerPy ] = useState<number>(0);
   const [ playerRadius, setPlayerRadius ] = useState<number>(10);

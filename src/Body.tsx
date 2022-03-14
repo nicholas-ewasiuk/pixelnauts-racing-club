@@ -1,62 +1,91 @@
 /** @jsxImportSource @emotion/react */
 import React, { useCallback, useEffect, useState } from "react";
 import styled from '@emotion/styled';
-import { ModdedWalletButton } from "./components/ModdedWalletButton";
+import { css } from '@emotion/react';
+import { WalletButton } from "./components/WalletButton";
 import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
 import { NFTGet } from "./actions/NFTget";
-import { INFT } from "./helpers";
-import { Canvas } from "./components/Canvas";
+import { GameCanvas } from "./components/GameCanvas";
 import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
+import { lighten } from "polished";
+import { SelectOrcaMenu } from "./components/SelectOrcaMenu";
 
 export const Body: React.FC = () => {
-  const [ balance, setBalance ] = useState<number | null>(null);
-  const [ nfts, setNFTs ] = useState<INFT[] | null >(null);
-  const [ myOrca, setMyOrca ] = useState<string[] | null>(null);
+  const [ orcas, setOrcas ] = useState<string[][] | null>(null);
+  const [ index, setIndex ] = useState<number>(0);
+  const [ isPlaying, setIsPlaying ] = useState<boolean>(false);
 
   const { providerMut, connection, network, setNetwork } = useSolana();
   const wallet = useConnectedWallet();
 
-  const refetchSOL = useCallback(async () => {
-    if (wallet && providerMut) {
-      setBalance(await providerMut.connection.getBalance(wallet.publicKey));
-    }
-  }, [providerMut, wallet]);
+  const startRace = () => {
+    setIsPlaying(!isPlaying);
+  };
 
-  const handleClickTest = async () => {
-    if(!wallet) throw Error("Wallet not connected");
-    const nfts = await NFTGet(wallet.publicKey, connection);
-    console.log(nfts);
-    setNFTs(nfts);
-  }
+  const selectPrevious = () => {
+    if (index > 0) {
+      setIndex(x => x - 1);
+    }
+  };
+
+  const selectNext = () => {
+    if (orcas) {
+      if (index < orcas.length - 1) {
+        setIndex(x => x + 1);
+      }
+    }
+  };
+
+  const refetchOrcas = useCallback(async () => {
+    if (wallet) {
+      const nfts = await NFTGet(wallet.publicKey, connection)
+      const orcaMetadata = filterOrcanauts(nfts);
+      const orcas = pixelateOrcas(orcaMetadata);
+      setOrcas(orcas);
+    }
+  }, [wallet]);
 
   useEffect(() => {
-    if (nfts) {
+    void refetchOrcas();
+  }, [refetchOrcas]);
+
+  /*
+  useEffect(() => {
+    if (wallet) {
       const orcas = filterOrcanauts(nfts);
       const traits = pixelateOrcas(orcas);
       console.log(traits[0])
-      setMyOrca(traits[0]);
     }
-  }, [nfts]);
-
-  useEffect(() => {
-    void refetchSOL();
-    console.log(network);
-  }, [refetchSOL]);
+  }, [wallet]);
+  */
 
   return (
     <AppWrapper>
-      <h1>Hello World</h1>
-      <ModdedWalletButton 
+      <span>Welcome to</span>
+      <span>Pixelnauts Racing Club</span>
+      <WalletButton 
         wallet={wallet}
-        balance={balance}
       />
-      <button
-        onClick={handleClickTest}
-      >
-        Button for Testing!
-      </button>
-      { myOrca &&
-        <Canvas orca={myOrca}/>
+      { orcas && !isPlaying &&
+        <>
+        <Button
+          onClick={startRace}
+        >
+          <span>Race!</span>
+        </Button>
+        <div>
+          <button onClick={selectPrevious}>
+            Previous
+          </button>
+          <SelectOrcaMenu orca={orcas[index]} />
+          <button onClick={selectNext}>
+            Next
+          </button>
+        </div>
+        </>
+      }
+      { isPlaying && orcas &&
+        <GameCanvas orca={orcas[index]}/>
       }
     </AppWrapper>
   );
@@ -66,6 +95,33 @@ const AppWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const Button = styled.button`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  outline: none;
+  border-style: solid;
+  border-color: #1d257a;
+  @media (max-width: 576px) {
+    width: 140px;
+    height: 60px;
+  }
+  box-shadow: none;
+  border-radius: 0px;
+  width: 200px;
+  height: 40px;
+  background: inherit;
+  color: #1d257a;
+  &:hover {
+    background: ${lighten(0.1, "#1d257a")};
+  }
+  & > span {
+    font-size: 20px;
+    font-family: 'DotGothic16', sans-serif;
+    font-weight: inherit;
+  }
 `;
 
 /*
