@@ -62,8 +62,14 @@ export const Body: React.FC = () => {
 
   return (
     <AppWrapper>
-      <span>Welcome to</span>
-      <span>Pixelnauts Racing Club</span>
+      <p
+        css={css`
+          width: 200px;
+          font-size: 32px
+        `}
+      >
+        Welcome to Pixelnauts Racing Club
+      </p>
       <WalletButton 
         wallet={wallet}
       />

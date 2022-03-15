@@ -23,6 +23,7 @@ export const GameCanvas = ({ orca }: Props) => {
   const [ levelCounter, setLevelCounter ] = useState<number>(0);
   const [ isPaused, setIsPaused ] = useState<boolean>(false);
   const [ gameState, setGameState ] = useState<number>(0);
+  const [ restart, setRestart ] = useState<boolean>(false);
 
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -107,6 +108,7 @@ export const GameCanvas = ({ orca }: Props) => {
       let ground = canvas.height;
       let cleared = gateCleared;
       let lvlCounter = levelCounter;
+      let lvlRestart = restart;
 
       let renderFps = 120;
       let renderStart = 0;
@@ -199,8 +201,9 @@ export const GameCanvas = ({ orca }: Props) => {
                 lvlCounter += 1;
                 setLevelCounter(lvlCounter);
               }
-            } else {
-              console.log("Game Over");
+            } else if (!lvlRestart) {
+              setRestart(true);
+              lvlRestart = true;
             }
           }
           //Collisions
@@ -318,12 +321,14 @@ export const GameCanvas = ({ orca }: Props) => {
       <button onClick={() => setIsPaused(!isPaused)}>
         {isPaused ? "Resume" : "Pause"}
       </button>
-      <button 
-        disabled={!isPaused}
-        onClick={() => {setGatePx(600); setGateSpeed(5);}}
-      >
-        Restart
-      </button>
+      { restart &&
+        <button 
+          disabled={!restart}
+          onClick={() => {setGatePx(600); setGateSpeed(5); setRestart(false); setGameState(0);}}
+        >
+          Restart
+        </button>
+      }
     </div>
   );
 }
