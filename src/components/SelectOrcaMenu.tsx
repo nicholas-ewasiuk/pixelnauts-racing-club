@@ -16,6 +16,14 @@ type Props = {
 export const SelectOrcaMenu = ({ orca }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  interface SpriteSheet {
+    img: HTMLImageElement
+    sWidth: number
+    sHeight: number
+    dx: number
+    dy: number
+  }
+
   useLayoutEffect(() => {
     if (canvasRef.current && orca) {
       //Initial state
@@ -57,6 +65,41 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
       Mouth.src = mouth[sMouth];
       Eyes.src = eyes[sEyes];
       Accessory.src = accessory[sAccessory];
+
+      const oBg: SpriteSheet = {
+        img: Background,
+        sWidth: 40,
+        sHeight: 40,
+        dx: 0,
+        dy: 0,
+      }
+      const oBody: SpriteSheet = {
+        img: Background,
+        sWidth: 32,
+        sHeight: 19,
+        dx: 2,
+        dy: 16
+      }
+      const oHat: SpriteSheet = {
+        img: Background,
+        sWidth: 28,
+        sHeight: 36,
+      }
+      const oMouth: SpriteSheet = {
+        img: Background,
+        sWidth: 28,
+        sHeight: 20,
+      }
+      const oEyes: SpriteSheet = {
+        img: Background,
+        sWidth: 24,
+        sHeight: 32,
+      }
+      const oAccessory: SpriteSheet = {
+        img: Background,
+        sWidth: 40,
+        sHeight: 40,
+      }
       //Need Error handling for "none" condition. 
       //okay just used the holiday items as placeholder for now.
 
@@ -92,15 +135,15 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
           ctx.imageSmoothingEnabled = false;
 
           ctx.drawImage(
-            Background,
+            oBg.img,
             0,
             0,
-            40,
-            40,
+            oBg.sWidth,
+            oBg.sHeight,
             0 + imgScale,
             0 + imgScale,
-            40 * imgScale,
-            40 * imgScale
+            oBg.sWidth * imgScale,
+            oBg.sHeight * imgScale
           )
           ctx.drawImage(
             Body,

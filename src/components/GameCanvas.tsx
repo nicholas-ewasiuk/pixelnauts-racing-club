@@ -9,6 +9,7 @@ import eyes from '../assets/pixelnauts/eyes';
 import hat from '../assets/pixelnauts/hat';
 import mouth from '../assets/pixelnauts/mouth';
 import sound from "url:../assets/main-theme.mp3"
+import world from '../assets/environment';
 
 type Props = {
   orca: string[];
@@ -167,12 +168,14 @@ export const GameCanvas = ({ orca }: Props) => {
       const Mouth = new Image();
       const Eyes = new Image();
       const Accessory = new Image();
+      const Environment = new Image();
 
       Body.src = body[sBody];
       Hat.src = hat[sHat];
       Mouth.src = mouth[sMouth];
       Eyes.src = eyes[sEyes];
       Accessory.src = accessory[sAccessory];
+      Environment.src = world.sandy_bottom;
 
       const spriteOffsetX = 24;
       const spriteOffsetY = 25;
@@ -268,7 +271,18 @@ export const GameCanvas = ({ orca }: Props) => {
           ctx.fill();
           ctx.closePath();
           */
-
+          ctx.drawImage(
+            Environment,
+            0,
+            0,
+            300,
+            200,
+            0,
+            0,
+            900,
+            600
+          );
+          
           ctx.beginPath();
           ctx.arc(gate.px, gate.py, gate.radius, 0, Math.PI*2);
           ctx.fillStyle = "#e75569";
