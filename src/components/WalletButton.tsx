@@ -18,7 +18,7 @@ export const WalletButton = ({ wallet, orcas }: Props) => {
 
   useEffect(() => {
     if (wallet) {
-      setTimeout(() => {setLoadingMsg("No Orcanauts Found :(")}, 10000);
+      setTimeout(() => {setLoadingMsg("Do you own an Orcanaut? Loading may take a while if you have many NFTs.")}, 10000);
     }
   }, [wallet])
 
@@ -42,6 +42,9 @@ export const WalletButton = ({ wallet, orcas }: Props) => {
     { wallet && !orcas &&
       <p
         css={css`
+          margin: 100px 0 100px 0;
+          width: 300px;
+          height: 150px;
           font-size: 24px;
         `}
       >
@@ -59,11 +62,6 @@ const button = css`
   outline: none;
   border-style: solid;
   border-color: #1d257a;
-  @media (max-width: 576px) {
-    margin: 0 20px 0 0;
-    width: 140px;
-    height: 60px;
-  }
   box-shadow: none;
   border-radius: 0px;
   width: 200px;
@@ -79,6 +77,7 @@ const button = css`
 `;
 
 const connected = css`
+  width: 150px;
   background: inherit;
   font-weight: inherit;
   font-size: 20px;

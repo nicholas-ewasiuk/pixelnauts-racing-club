@@ -85,6 +85,5 @@ export const NFTGet = async (owner: PublicKey, connection: Connection): Promise<
 
 
 /*
-  - Tweak tokensToEnrichedNFTs so only runs for Orcanauts
   - Passing connection through everything, figure out cleaner way later?
  */

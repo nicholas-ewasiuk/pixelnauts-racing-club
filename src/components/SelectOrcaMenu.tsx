@@ -10,20 +10,20 @@ import mouth from '../assets/pixelnauts/mouth';
 
 
 type Props = {
-  orca: string[],
+  orca: string[] | null,
 }
 
 export const SelectOrcaMenu = ({ orca }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useLayoutEffect(() => {
-    if (canvasRef.current) {
+    if (canvasRef.current && orca) {
       //Initial state
       let timerId: number;
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
-      canvas.width = 160;
-      canvas.height = 160;
+      canvas.width = 240;
+      canvas.height = 240;
 
       let renderFps = 120;
       let renderStart = 0;
@@ -60,7 +60,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
       //Need Error handling for "none" condition. 
       //okay just used the holiday items as placeholder for now.
 
-      const imgScale = 4;
+      const imgScale = 6;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);

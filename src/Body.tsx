@@ -6,7 +6,7 @@ import { WalletButton } from "./components/WalletButton";
 import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
 import { NFTGet } from "./actions/NFTget";
 import { GameCanvas } from "./components/GameCanvas";
-import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
+import { filterOrcanauts, okToFailSync, pixelateOrcas } from "./helpers/util";
 import { lighten } from "polished";
 import { SelectOrcaMenu } from "./components/SelectOrcaMenu";
 
@@ -40,10 +40,14 @@ export const Body: React.FC = () => {
   const refetchOrcas = useCallback(async () => {
     if (wallet) {
       const nfts = await NFTGet(wallet.publicKey, connection)
+      //Fetching external metadata for all NFTs in wallet is inefficient if just looking for orcas.
+      //Need to tweak this at some point.
       const orcaMetadata = filterOrcanauts(nfts);
       const orcas = pixelateOrcas(orcaMetadata);
-      setOrcas(orcas);
       console.log(orcas);
+      if (orcas.length) {
+        setOrcas(orcas);
+      }
     }
   }, [wallet]);
 
@@ -69,10 +73,10 @@ export const Body: React.FC = () => {
               Welcome to<br></br>Pixelnauts Racing Club!
             </p>
           </div>
-          <WalletButton 
-            wallet={wallet}
-            orcas={orcas}
-          />
+            <WalletButton 
+              wallet={wallet}
+              orcas={orcas}
+            />
         </>
       }
       { orcas && !isPlaying &&
@@ -83,8 +87,8 @@ export const Body: React.FC = () => {
               flex-direction: row;
               justify-content: space-evenly;
               align-items: center;
-              margin: 20px 0 20px 0;
-              width: 500px;
+              margin: 35px 0 35px 0;
+              width: 650px;
             `}
           >
             <button
@@ -102,24 +106,31 @@ export const Body: React.FC = () => {
             </button>
           </div>
           <button
-            css={[button, small]}
+            css={[button]}
             onClick={startRace}
           >
             Choose
           </button>
-          <button
-            css={[button, small]}
-            onClick={() => setIsHelpOpen(!isHelpOpen)}
-          >
-            Help
-          </button>
         </>
       }
-      { isHelpOpen &&
-        <p>
-          This game requires an Orcanaut to play<br></br>
-          You can sweep one off the floor at <a href="https://magiceden.io/marketplace/orcanauts">Magic Eden</a><br></br>
-          Arrow keys or WASD to move<br></br>
+      { wallet &&
+        <button
+          css={[button, small]}
+          onClick={() => setIsHelpOpen(!isHelpOpen)}
+        >
+          Help
+        </button>
+      }
+      { isHelpOpen && !isPlaying &&
+        <p 
+          css={css`
+            text-align: center;
+            font-size: 24px
+          `}
+        >
+          This game requires an Orcanaut to play.<br></br>
+          You can adopt one at <a href="https://magiceden.io/marketplace/orcanauts">Magic Eden</a>.<br></br>
+          Arrow keys to move<br></br>
           Esc to pause
         </p>
       }
@@ -141,6 +152,7 @@ const button = css`
   justify-content: space-evenly;
   align-items: center;
   outline: none;
+  margin: 10px 0 10px 0;
   border-style: solid;
   border-color: #1d257a;
   box-shadow: none;
