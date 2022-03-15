@@ -9,7 +9,7 @@ import { GameCanvas } from "./components/GameCanvas";
 import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
 import { lighten } from "polished";
 import { SelectOrcaMenu } from "./components/SelectOrcaMenu";
-import sound from "url:./assets/bensound-brazilsamba.mp3"
+import sound from "url:./assets/main-theme.mp3"
 
 export const Body: React.FC = () => {
   const [ orcas, setOrcas ] = useState<string[][] | null>(null);
@@ -39,6 +39,10 @@ export const Body: React.FC = () => {
       }
     }
   };
+
+  const playWithout = () => {
+    setOrcas([['tokyo','orca','astronaut_helmet','smirk','droopy','none']]);
+  }
 
   const handleAudioClick = () => {
     const audio = audioRef;
@@ -86,6 +90,14 @@ export const Body: React.FC = () => {
               orcas={orcas}
             />
         </>
+      }
+      {!isPlaying && !wallet && 
+        <button
+          css={[button]}
+          onClick={playWithout}
+        >
+          Just Play
+        </button>
       }
       { orcas && !isPlaying &&
         <>
@@ -149,10 +161,6 @@ export const Body: React.FC = () => {
         ref={audioRef}
         src={sound}
       />
-      <button
-        onClick={handleAudioClick}>
-        Test Audio
-      </button>
     </AppWrapper>
   );
 };

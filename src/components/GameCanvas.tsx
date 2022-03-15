@@ -8,6 +8,7 @@ import body from '../assets/pixelnauts/body';
 import eyes from '../assets/pixelnauts/eyes';
 import hat from '../assets/pixelnauts/hat';
 import mouth from '../assets/pixelnauts/mouth';
+import sound from "url:../assets/main-theme.mp3"
 
 type Props = {
   orca: string[];
@@ -30,6 +31,8 @@ export const GameCanvas = ({ orca }: Props) => {
 
   const [ showPlayBtn, setShowPlayBtn ] = useState<number>(0);
 
+  const audioRef = useRef(null);
+
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -44,12 +47,20 @@ export const GameCanvas = ({ orca }: Props) => {
   const handlePlay = (e) => {
     setGameState(1);
     e.target.style.opacity = showPlayBtn;
+    const audio = audioRef;
+    audio.current.play();
     //console.log(e.target);
   }
 
   const handlePause = (e) => {
     if (e.key == "Escape") {
       setIsPaused(!isPaused);
+      const audio = audioRef;
+      if (isPaused) {
+        audio.current.play();
+      } else {
+        audio.current.pause();
+      }
     }
   }
   
@@ -367,6 +378,10 @@ export const GameCanvas = ({ orca }: Props) => {
             Restart
           </button>
         }
+        <audio
+          ref={audioRef}
+          src={sound}
+        />
       </div>
     </div>
   );
