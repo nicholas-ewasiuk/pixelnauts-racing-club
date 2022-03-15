@@ -10,18 +10,19 @@ import hat from '../assets/pixelnauts/hat';
 import mouth from '../assets/pixelnauts/mouth';
 import sound from "url:../assets/main-theme.mp3"
 import world from '../assets/environment';
+import { SpriteSheet } from '../helpers';
 
 type Props = {
   orca: string[];
 }
 
 export const GameCanvas = ({ orca }: Props) => {
-  const [ playerPx, setPlayerPx ] = useState<number>(0);
-  const [ playerPy, setPlayerPy ] = useState<number>(0);
+  const [ playerPx, setPlayerPx ] = useState<number>(50);
+  const [ playerPy, setPlayerPy ] = useState<number>(300);
   const [ playerRadius, setPlayerRadius ] = useState<number>(20);
   const [ playerSpeed, setPlayerSpeed ] = useState<number>(3);
   const [ gatePx, setGatePx] = useState<number>(800);
-  const [ gatePy, setGatePy] = useState<number>(0);
+  const [ gatePy, setGatePy] = useState<number>(300);
   const [ gateRadius, setGateRadius ] = useState<number>(10);
   const [ gateSpeed, setGateSpeed ] = useState<number>(5);
   const [ gateCleared, setGateCleared ] = useState<boolean>(true);
@@ -143,6 +144,7 @@ export const GameCanvas = ({ orca }: Props) => {
       let cleared = gateCleared;
       let lvlCounter = levelCounter;
       let lvlRestart = restart;
+      let bgScroll = 0;
 
       let renderFps = 120;
       let renderStart = 0;
@@ -177,6 +179,12 @@ export const GameCanvas = ({ orca }: Props) => {
       Accessory.src = accessory[sAccessory];
       Environment.src = world.sandy_bottom;
 
+      const oEnvironment: SpriteSheet = {
+        img: Environment,
+        sWidth: 400,
+        sHeight: 300,
+      }
+
       const spriteOffsetX = 24;
       const spriteOffsetY = 25;
       const imgScale = 2;
@@ -195,6 +203,12 @@ export const GameCanvas = ({ orca }: Props) => {
           elapsed = simFrameDuration;
         }
         lag += elapsed;
+        //Animation Logic
+        if (bgScroll < oEnvironment.sWidth) {
+          bgScroll += 3;
+        } else {
+          bgScroll = 0;
+        }
 
         //Logic
         while (lag >= simFrameDuration) {
@@ -221,7 +235,7 @@ export const GameCanvas = ({ orca }: Props) => {
           if (gate.px < 0) {
             if (cleared) {
               gate.px = canvas.width;
-              gate.py = Math.random() * (canvas.height - canvas.height*1/3) + canvas.height*1/3;
+              gate.py = Math.random() * (canvas.height - canvas.height*1/3 - 70) + canvas.height*1/3;
               cleared = false;
               setGatePx(gate.px);
               setGatePy(gate.py);
@@ -273,16 +287,16 @@ export const GameCanvas = ({ orca }: Props) => {
           */
           ctx.drawImage(
             Environment,
+            bgScroll,
             0,
-            0,
+            400,
             300,
-            200,
             0,
             0,
-            900,
+            800,
             600
           );
-          
+
           ctx.beginPath();
           ctx.arc(gate.px, gate.py, gate.radius, 0, Math.PI*2);
           ctx.fillStyle = "#e75569";

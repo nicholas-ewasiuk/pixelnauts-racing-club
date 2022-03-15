@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import { SpriteSheet } from '../helpers';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
@@ -15,14 +16,6 @@ type Props = {
 
 export const SelectOrcaMenu = ({ orca }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
-  interface SpriteSheet {
-    img: HTMLImageElement
-    sWidth: number
-    sHeight: number
-    dx: number
-    dy: number
-  }
 
   useLayoutEffect(() => {
     if (canvasRef.current && orca) {
