@@ -62,33 +62,66 @@ export const Body: React.FC = () => {
 
   return (
     <AppWrapper>
-      <p
-        css={css`
-          width: 200px;
-          font-size: 32px
-        `}
-      >
-        Welcome to Pixelnauts Racing Club
-      </p>
-      <WalletButton 
-        wallet={wallet}
-      />
+      { !isPlaying &&
+        <>
+          <div
+            css={css`
+              display: flex;
+              justify-content: center;
+            `}
+          >
+            <p
+              css={css`
+                font-size: 32px
+              `}
+            >
+              Welcome to<br></br>Pixelnauts Racing Club!
+            </p>
+          </div>
+          <WalletButton 
+            wallet={wallet}
+            orcas={orcas}
+          />
+        </>
+      }
       { orcas && !isPlaying &&
         <>
-        <Button
-          onClick={startRace}
-        >
-          <span>Race!</span>
-        </Button>
-        <div>
-          <button onClick={selectPrevious}>
-            Previous
+          <div
+            css={css`
+              display: flex;
+              flex-direction: row;
+              justify-content: space-evenly;
+              align-items: center;
+              margin: 20px 0 20px 0;
+              width: 500px;
+            `}
+          >
+            <button
+              css={css`
+                ${[button, small]}
+              `}
+              onClick={selectPrevious}
+            >
+              Previous
+            </button>
+            <SelectOrcaMenu orca={orcas[index]} />
+            <button 
+              css={css`
+                ${[button, small]}
+              `}
+              onClick={selectNext}
+            >
+              Next
+            </button>
+          </div>
+          <button
+            css={css`
+              ${[button, small]}
+            `}
+            onClick={startRace}
+          >
+            Choose
           </button>
-          <SelectOrcaMenu orca={orcas[index]} />
-          <button onClick={selectNext}>
-            Next
-          </button>
-        </div>
         </>
       }
       { isPlaying && orcas &&
@@ -104,31 +137,30 @@ const AppWrapper = styled.div`
   align-items: center;
 `;
 
-const Button = styled.button`
+const button = css`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   outline: none;
   border-style: solid;
   border-color: #1d257a;
-  @media (max-width: 576px) {
-    width: 140px;
-    height: 60px;
-  }
   box-shadow: none;
   border-radius: 0px;
   width: 200px;
   height: 40px;
   background: inherit;
+  font-size: 20px;
+  font-family: 'DotGothic16', sans-serif;
+  font-weight: inherit;
   color: #1d257a;
   &:hover {
     background: ${lighten(0.1, "#1d257a")};
   }
-  & > span {
-    font-size: 20px;
-    font-family: 'DotGothic16', sans-serif;
-    font-weight: inherit;
-  }
+`;
+
+const small = css`
+  width: 100px;
+  height: 40px;
 `;
 
 /*

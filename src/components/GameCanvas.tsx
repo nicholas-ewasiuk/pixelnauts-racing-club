@@ -1,3 +1,5 @@
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
@@ -86,8 +88,8 @@ export const GameCanvas = ({ orca }: Props) => {
 
       const ctx = canvas.getContext("2d");
 
-      canvas.width = 600;
-      canvas.height = 300;
+      canvas.width = 900;
+      canvas.height = 450;
 
       const player: CircleCollider = {
         px: playerPx,
@@ -308,11 +310,16 @@ export const GameCanvas = ({ orca }: Props) => {
   }, [isPaused, canvasRef, gameState]);
 
   return (
-    <div>
+    <div 
+      css={css`
+        margin: 100px 0 0 20px;
+        border: 3px solid #1d257a;
+      `}
+    >
       <canvas
         ref={canvasRef}>
       </canvas>
-      <button 
+      <button
         disabled={gameState == 1}
         onClick={() => setGameState(1)}
       >

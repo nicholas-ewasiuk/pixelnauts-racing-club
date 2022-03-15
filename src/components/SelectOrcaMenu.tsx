@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import accessory from '../assets/pixelnauts/accessory';
@@ -168,8 +169,15 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
   }, [canvasRef, orca]);
 
   return (
-    <canvas
-      ref={canvasRef}>
-    </canvas>
+    <div
+      css={css`
+        padding: 3px 8px 2px 3px;
+        border: 3px solid #1d257a;
+      `}
+    >
+      <canvas
+        ref={canvasRef}>
+      </canvas>
+    </div>
   );
 }

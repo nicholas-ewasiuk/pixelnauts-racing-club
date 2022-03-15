@@ -7,31 +7,40 @@ import { breakpoints } from '../App';
 
 type Props = {
   wallet: ConnectedWallet | null,
+  orcas: string[][] | null,
 }
 
 /**
  * Added functionality and styles for the @gokiprotocol/walletkit "ConnectWalletButton".
  */
-export const WalletButton = ({ wallet }: Props) => {
+export const WalletButton = ({ wallet, orcas }: Props) => {
   const { connect } = useWalletKit();
   return (
     <>
-    { wallet ? (
-      <button css={[button, connected]}>
-        <span>
-          Connected
-        </span>
+    { wallet &&
+      <button 
+        css={[button, connected]}
+      >
+        Connected
       </button>
-    ) : (
-      <button
+    }
+    { wallet && !orcas &&
+      <p
         css={css`
-          ${button}
-        `} 
+          font-size: 24px;
+        `}
+      >
+        Pixelating your Orcanauts...
+      </p>
+    }
+    { !wallet &&
+      <button
+        css={button}
         onClick={connect}
       >
-        <span>Connect Wallet</span>
+        Connect Wallet
       </button>
-    )}
+    }
     </>
   )
 }
@@ -53,26 +62,21 @@ const button = css`
   width: 200px;
   height: 40px;
   background: inherit;
-  font-size: 18px;
+  font-size: 20px;
+  font-family: 'DotGothic16', sans-serif;
+  font-weight: inherit;
   color: #1d257a;
   &:hover {
     background: ${lighten(0.1, "#1d257a")};
-  }
-  & > span {
-    font-size: 20px;
-    font-family: 'DotGothic16', sans-serif;
-    font-weight: inherit;
   }
 `;
 
 const connected = css`
   background: inherit;
+  font-weight: inherit;
+  font-size: 20px;
   &:hover {
     background: ${lighten(0.1, "#1d257a")};
-  }
-  & > span {
-    font-weight: inherit;
-    font-size: 20px;
   }
 `
 
