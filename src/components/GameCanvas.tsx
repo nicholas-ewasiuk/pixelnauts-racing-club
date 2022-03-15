@@ -19,7 +19,7 @@ export const GameCanvas = ({ orca }: Props) => {
   const [ playerPy, setPlayerPy ] = useState<number>(0);
   const [ playerRadius, setPlayerRadius ] = useState<number>(20);
   const [ playerSpeed, setPlayerSpeed ] = useState<number>(3);
-  const [ gatePx, setGatePx] = useState<number>(600);
+  const [ gatePx, setGatePx] = useState<number>(900);
   const [ gatePy, setGatePy] = useState<number>(0);
   const [ gateRadius, setGateRadius ] = useState<number>(10);
   const [ gateSpeed, setGateSpeed ] = useState<number>(5);
@@ -32,6 +32,7 @@ export const GameCanvas = ({ orca }: Props) => {
   const [ showPlayBtn, setShowPlayBtn ] = useState<number>(0);
 
   const audioRef = useRef(null);
+  const playBtnRef = useRef(null);
 
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -46,20 +47,26 @@ export const GameCanvas = ({ orca }: Props) => {
 
   const handlePlay = (e) => {
     setGameState(1);
-    e.target.style.opacity = showPlayBtn;
-    const audio = audioRef;
-    audio.current.play();
+    playBtnRef.current.style.opacity = showPlayBtn;
+    audioRef.current.play();
     //console.log(e.target);
+  }
+
+  const handleRestart = (e) => {
+    setGatePx(900); 
+    setGateSpeed(5); 
+    setRestart(false); 
+    setGameState(0);
+    playBtnRef.current.style.opacity = 100;
   }
 
   const handlePause = (e) => {
     if (e.key == "Escape") {
       setIsPaused(!isPaused);
-      const audio = audioRef;
       if (isPaused) {
-        audio.current.play();
+        audioRef.current.play();
       } else {
-        audio.current.pause();
+        audioRef.current.pause();
       }
     }
   }
@@ -230,6 +237,7 @@ export const GameCanvas = ({ orca }: Props) => {
             } else if (!lvlRestart) {
               setRestart(true);
               lvlRestart = true;
+              audioRef.current.pause();
             }
           }
           //Collisions
@@ -364,6 +372,7 @@ export const GameCanvas = ({ orca }: Props) => {
       <div>
         <button
           css={[button, small]}
+          ref={playBtnRef}
           onClick={handlePlay}
           onKeyDown={handlePause}
         >
@@ -373,7 +382,7 @@ export const GameCanvas = ({ orca }: Props) => {
           <button 
             css={[button, small]}
             disabled={!restart}
-            onClick={() => {setGatePx(600); setGateSpeed(5); setRestart(false); setGameState(0);}}
+            onClick={handleRestart}
           >
             Restart
           </button>
@@ -381,6 +390,7 @@ export const GameCanvas = ({ orca }: Props) => {
         <audio
           ref={audioRef}
           src={sound}
+          loop
         />
       </div>
     </div>
