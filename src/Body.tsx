@@ -1,14 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { WalletButton } from "./components/WalletButton";
 import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
 import { NFTGet } from "./actions/NFTget";
 import { GameCanvas } from "./components/GameCanvas";
-import { filterOrcanauts, okToFailSync, pixelateOrcas } from "./helpers/util";
+import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
 import { lighten } from "polished";
 import { SelectOrcaMenu } from "./components/SelectOrcaMenu";
+import sound from "url:./assets/bensound-brazilsamba.mp3"
 
 export const Body: React.FC = () => {
   const [ orcas, setOrcas ] = useState<string[][] | null>(null);
@@ -18,6 +19,8 @@ export const Body: React.FC = () => {
 
   const { connection } = useSolana();
   const wallet = useConnectedWallet();
+
+  const audioRef = useRef(null);
 
   const startRace = () => {
     setIsPlaying(!isPlaying);
@@ -36,6 +39,11 @@ export const Body: React.FC = () => {
       }
     }
   };
+
+  const handleAudioClick = () => {
+    const audio = audioRef;
+    audio.current.play();
+  }
 
   const refetchOrcas = useCallback(async () => {
     if (wallet) {
@@ -113,7 +121,7 @@ export const Body: React.FC = () => {
           </button>
         </>
       }
-      { wallet &&
+      { wallet && !isPlaying &&
         <button
           css={[button, small]}
           onClick={() => setIsHelpOpen(!isHelpOpen)}
@@ -137,6 +145,14 @@ export const Body: React.FC = () => {
       { isPlaying && orcas &&
         <GameCanvas orca={orcas[index]}/>
       }
+      <audio
+        ref={audioRef}
+        src={sound}
+      />
+      <button
+        onClick={handleAudioClick}>
+        Test Audio
+      </button>
     </AppWrapper>
   );
 };
