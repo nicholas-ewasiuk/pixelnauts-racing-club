@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import { lighten } from 'polished';
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
@@ -27,6 +28,8 @@ export const GameCanvas = ({ orca }: Props) => {
   const [ gameState, setGameState ] = useState<number>(0);
   const [ restart, setRestart ] = useState<boolean>(false);
 
+  const [ showPlayBtn, setShowPlayBtn ] = useState<number>(0);
+
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -36,6 +39,18 @@ export const GameCanvas = ({ orca }: Props) => {
     py: number; 
     radius: number;
     id: string;
+  }
+
+  const handlePlay = (e) => {
+    setGameState(1);
+    e.target.style.opacity = showPlayBtn;
+    //console.log(e.target);
+  }
+
+  const handlePause = (e) => {
+    if (e.key == "Escape") {
+      setIsPaused(!isPaused);
+    }
   }
   
   //animation loop structure 
@@ -303,40 +318,82 @@ export const GameCanvas = ({ orca }: Props) => {
       }
     
       //Cleanup function triggers when useLayoutEffect is called again.
-      return () => cancelAnimationFrame(timerId);
+      return () => {
+        cancelAnimationFrame(timerId);
+        document.removeEventListener("keydown", keyDownHandler, false);
+        document.removeEventListener("keyup", keyUpHandler, false);
+      }
     }
   }, [isPaused, canvasRef, gameState]);
 
   return (
-    <div 
+    <div
       css={css`
-        margin: 100px 0 0 20px;
-        border: 3px solid #1d257a;
-        width: 900px;
-        height: 450px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
       `}
     >
-      <canvas
-        ref={canvasRef}>
-      </canvas>
-      <button
-        disabled={gameState == 1}
-        onClick={() => setGameState(1)}
+      <div 
+        css={css`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin: 100px 0 20px 0;
+          border: 3px solid #1d257a;
+          width: 920px;
+          height: 470px;
+        `}
       >
-        Play
-      </button>
-      <button onClick={() => setIsPaused(!isPaused)}>
-        {isPaused ? "Resume" : "Pause"}
-      </button>
-      { restart &&
-        <button 
-          disabled={!restart}
-          onClick={() => {setGatePx(600); setGateSpeed(5); setRestart(false); setGameState(0);}}
+        <canvas
+          ref={canvasRef}>
+        </canvas>
+      </div>
+      <div>
+        <button
+          css={[button, small]}
+          onClick={handlePlay}
+          onKeyDown={handlePause}
         >
-          Restart
+          Play
         </button>
-      }
+        { restart &&
+          <button 
+            css={[button, small]}
+            disabled={!restart}
+            onClick={() => {setGatePx(600); setGateSpeed(5); setRestart(false); setGameState(0);}}
+          >
+            Restart
+          </button>
+        }
+      </div>
     </div>
   );
 }
 
+const button = css`
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  outline: none;
+  border-style: solid;
+  border-color: #1d257a;
+  box-shadow: none;
+  border-radius: 0px;
+  width: 200px;
+  height: 40px;
+  background: inherit;
+  font-size: 20px;
+  font-family: 'DotGothic16', sans-serif;
+  font-weight: inherit;
+  color: #1d257a;
+  &:hover {
+    background: ${lighten(0.1, "#1d257a")};
+  }
+`;
+
+const small = css`
+  width: 100px;
+  height: 40px;
+`;

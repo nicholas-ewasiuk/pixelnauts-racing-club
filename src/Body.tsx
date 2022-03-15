@@ -14,6 +14,7 @@ export const Body: React.FC = () => {
   const [ orcas, setOrcas ] = useState<string[][] | null>(null);
   const [ index, setIndex ] = useState<number>(0);
   const [ isPlaying, setIsPlaying ] = useState<boolean>(false);
+  const [ isHelpOpen, setIsHelpOpen ] = useState<boolean>(false);
 
   const { connection } = useSolana();
   const wallet = useConnectedWallet();
@@ -106,7 +107,21 @@ export const Body: React.FC = () => {
           >
             Choose
           </button>
+          <button
+            css={[button, small]}
+            onClick={() => setIsHelpOpen(!isHelpOpen)}
+          >
+            Help
+          </button>
         </>
+      }
+      { isHelpOpen &&
+        <p>
+          This game requires an Orcanaut to play<br></br>
+          You can sweep one off the floor at <a href="https://magiceden.io/marketplace/orcanauts">Magic Eden</a><br></br>
+          Arrow keys or WASD to move<br></br>
+          Esc to pause
+        </p>
       }
       { isPlaying && orcas &&
         <GameCanvas orca={orcas[index]}/>
