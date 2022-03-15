@@ -1,22 +1,37 @@
 /** @jsxImportSource @emotion/react */
+import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { lighten } from 'polished';
 import { ConnectedWallet } from '@saberhq/use-solana';
 import { useWalletKit } from '@gokiprotocol/walletkit';
 import { breakpoints } from '../App';
 
+
 type Props = {
   wallet: ConnectedWallet | null,
   orcas: string[][] | null,
 }
 
-/**
- * Added functionality and styles for the @gokiprotocol/walletkit "ConnectWalletButton".
- */
 export const WalletButton = ({ wallet, orcas }: Props) => {
+  const [ loadingMsg, setLoadingMsg ] = useState<string>("Looking for Orcanauts...");
   const { connect } = useWalletKit();
+
+  useEffect(() => {
+    if (wallet) {
+      setTimeout(() => {setLoadingMsg("No Orcanauts Found :(")}, 10000);
+    }
+  }, [wallet])
+
   return (
     <>
+    { !wallet &&
+      <button
+        css={button}
+        onClick={connect}
+      >
+        Connect Wallet
+      </button>
+    }
     { wallet &&
       <button 
         css={[button, connected]}
@@ -30,16 +45,8 @@ export const WalletButton = ({ wallet, orcas }: Props) => {
           font-size: 24px;
         `}
       >
-        Pixelating your Orcanauts...
+        {loadingMsg}
       </p>
-    }
-    { !wallet &&
-      <button
-        css={button}
-        onClick={connect}
-      >
-        Connect Wallet
-      </button>
     }
     </>
   )

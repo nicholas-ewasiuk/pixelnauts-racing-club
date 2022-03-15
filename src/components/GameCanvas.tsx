@@ -42,8 +42,6 @@ export const GameCanvas = ({ orca }: Props) => {
   //https://blog.jakuba.net/request-animation-frame-and-use-effect-vs-use-layout-effect/
   useLayoutEffect(() => {
     if (!isPaused && canvasRef.current && gameState) {
-      console.log(orca);
-      
       //Initial state
       let timerId: number;
       const canvas = canvasRef.current;
@@ -314,6 +312,8 @@ export const GameCanvas = ({ orca }: Props) => {
       css={css`
         margin: 100px 0 0 20px;
         border: 3px solid #1d257a;
+        width: 900px;
+        height: 450px;
       `}
     >
       <canvas

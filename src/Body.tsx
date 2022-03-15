@@ -15,7 +15,7 @@ export const Body: React.FC = () => {
   const [ index, setIndex ] = useState<number>(0);
   const [ isPlaying, setIsPlaying ] = useState<boolean>(false);
 
-  const { providerMut, connection, network, setNetwork } = useSolana();
+  const { connection } = useSolana();
   const wallet = useConnectedWallet();
 
   const startRace = () => {
@@ -49,16 +49,6 @@ export const Body: React.FC = () => {
   useEffect(() => {
     void refetchOrcas();
   }, [refetchOrcas]);
-
-  /*
-  useEffect(() => {
-    if (wallet) {
-      const orcas = filterOrcanauts(nfts);
-      const traits = pixelateOrcas(orcas);
-      console.log(traits[0])
-    }
-  }, [wallet]);
-  */
 
   return (
     <AppWrapper>
@@ -97,27 +87,21 @@ export const Body: React.FC = () => {
             `}
           >
             <button
-              css={css`
-                ${[button, small]}
-              `}
+              css={[button, small]}
               onClick={selectPrevious}
             >
               Previous
             </button>
             <SelectOrcaMenu orca={orcas[index]} />
             <button 
-              css={css`
-                ${[button, small]}
-              `}
+              css={[button, small]}
               onClick={selectNext}
             >
               Next
             </button>
           </div>
           <button
-            css={css`
-              ${[button, small]}
-            `}
+            css={[button, small]}
             onClick={startRace}
           >
             Choose
@@ -163,12 +147,6 @@ const small = css`
   height: 40px;
 `;
 
-/*
-Displaying the orcas component 
-  NFT display that takes nfts, filters the orcanauts,
-  and user can select the one to use. Orca nfts display can be opened and closed,
-  and can set new orca in between games.
-*/
 /*
   Attributions todo:
     ilmoi - NFT fetching code example
