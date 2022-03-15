@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
 import { lighten } from 'polished';
-import React, { useLayoutEffect, useRef, useState } from 'react';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
@@ -19,7 +19,7 @@ export const GameCanvas = ({ orca }: Props) => {
   const [ playerPy, setPlayerPy ] = useState<number>(0);
   const [ playerRadius, setPlayerRadius ] = useState<number>(20);
   const [ playerSpeed, setPlayerSpeed ] = useState<number>(3);
-  const [ gatePx, setGatePx] = useState<number>(900);
+  const [ gatePx, setGatePx] = useState<number>(800);
   const [ gatePy, setGatePy] = useState<number>(0);
   const [ gateRadius, setGateRadius ] = useState<number>(10);
   const [ gateSpeed, setGateSpeed ] = useState<number>(5);
@@ -53,7 +53,7 @@ export const GameCanvas = ({ orca }: Props) => {
   }
 
   const handleRestart = (e) => {
-    setGatePx(900); 
+    setGatePx(800); 
     setGateSpeed(5); 
     setRestart(false); 
     setGameState(0);
@@ -119,8 +119,8 @@ export const GameCanvas = ({ orca }: Props) => {
 
       const ctx = canvas.getContext("2d");
 
-      canvas.width = 900;
-      canvas.height = 450;
+      canvas.width = 800;
+      canvas.height = 600;
 
       const player: CircleCollider = {
         px: playerPx,
@@ -218,7 +218,7 @@ export const GameCanvas = ({ orca }: Props) => {
           if (gate.px < 0) {
             if (cleared) {
               gate.px = canvas.width;
-              gate.py = Math.random() * (canvas.height);
+              gate.py = Math.random() * (canvas.height - canvas.height*1/3) + canvas.height*1/3;
               cleared = false;
               setGatePx(gate.px);
               setGatePy(gate.py);
@@ -361,8 +361,8 @@ export const GameCanvas = ({ orca }: Props) => {
           align-items: center;
           margin: 100px 0 20px 0;
           border: 3px solid #1d257a;
-          width: 920px;
-          height: 470px;
+          width: 820px;
+          height: 620px;
         `}
       >
         <canvas
