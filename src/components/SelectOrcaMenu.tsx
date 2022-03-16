@@ -57,9 +57,6 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
         accessory: newSprite(accessory[sAccessory],40,40,0,0),
       }
 
-      function nextFrame() {
-
-      }
       const imgScale = 6;
 
       //Game Loop
