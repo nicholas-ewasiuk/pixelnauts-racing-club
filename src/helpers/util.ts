@@ -77,7 +77,9 @@ export function newSprite(
 export function drawSprite(
   ctx: CanvasRenderingContext2D, 
   sprite: SpriteSheet, 
-  scale: number
+  scale: number = 1,
+  px: number = 0,
+  py: number = 0,
 ) {
   ctx.drawImage(
    sprite.img,
@@ -85,8 +87,8 @@ export function drawSprite(
    0,  
    sprite.sWidth,
    sprite.sHeight,
-   sprite.dx * scale,
-   sprite.dy * scale,
+   px + sprite.dx * scale,
+   py + sprite.dy * scale,
    sprite.sWidth * scale,
    sprite.sHeight * scale
   );

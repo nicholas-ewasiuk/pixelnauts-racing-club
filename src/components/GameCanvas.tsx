@@ -8,9 +8,10 @@ import body from '../assets/pixelnauts/body';
 import eyes from '../assets/pixelnauts/eyes';
 import hat from '../assets/pixelnauts/hat';
 import mouth from '../assets/pixelnauts/mouth';
-import sound from "url:../assets/main-theme.mp3"
+import sound from "url:../assets/main-theme.ogg"
 import world from '../assets/environment';
-import { SpriteSheet } from '../helpers';
+import { OrcaSprite, SpriteSheet } from '../helpers';
+import { drawSprite, newSprite } from '../helpers/util';
 
 type Props = {
   orca: string[];
@@ -144,16 +145,17 @@ export const GameCanvas = ({ orca }: Props) => {
       let cleared = gateCleared;
       let lvlCounter = levelCounter;
       let lvlRestart = restart;
-      let bgScroll = 0;
 
       let renderFps = 120;
       let renderStart = 0;
       let renderFrameDuration = 1000/renderFps;
 
-      const simFps = 60;
+      let simFps = 60;
       let previous = 0; 
       const simFrameDuration = 1000/simFps;
       let lag = 0;
+      let animRate = 30;
+      let animCounter = 0;
 
       //Create the images from the selected orcanaut.
       const [
@@ -165,28 +167,19 @@ export const GameCanvas = ({ orca }: Props) => {
         sAccessory
       ] = orca;
 
-      const Body = new Image();
-      const Hat = new Image();
-      const Mouth = new Image();
-      const Eyes = new Image();
-      const Accessory = new Image();
-      const Environment = new Image();
-
-      Body.src = body[sBody];
-      Hat.src = hat[sHat];
-      Mouth.src = mouth[sMouth];
-      Eyes.src = eyes[sEyes];
-      Accessory.src = accessory[sAccessory];
-      Environment.src = world.sandy_bottom;
-
-      const oEnvironment: SpriteSheet = {
-        img: Environment,
-        sWidth: 400,
-        sHeight: 300,
+      const spOrca: OrcaSprite = {
+        background: newSprite(background[sBg],40,40,0,0),
+        body: newSprite(body[sBody],32,19,2,16),
+        hat: newSprite(hat[sHat],28,36,8,4),
+        mouth: newSprite(mouth[sMouth],28,20,8,16),
+        eyes: newSprite(eyes[sEyes],24,32,12,4),
+        accessory: newSprite(accessory[sAccessory],40,40,0,0),
       }
 
-      const spriteOffsetX = 24;
-      const spriteOffsetY = 25;
+      const Environment = newSprite(world.sandy_bottom,400,300,0,0);
+
+      const spriteOffsetX = 50;
+      const spriteOffsetY = 50;
       const imgScale = 2;
 
       //Game Loop
@@ -203,12 +196,6 @@ export const GameCanvas = ({ orca }: Props) => {
           elapsed = simFrameDuration;
         }
         lag += elapsed;
-        //Animation Logic
-        if (bgScroll < oEnvironment.sWidth * 2) {
-          bgScroll += 1;
-        } else {
-          bgScroll = 0;
-        }
 
         //Logic
         while (lag >= simFrameDuration) {
@@ -242,8 +229,8 @@ export const GameCanvas = ({ orca }: Props) => {
               setGateCleared(cleared);
               if (lvlCounter > 10) {
                 lvlCounter = 0;
-                gateSpd += 1;
-                playerSpd += 1;
+                gateSpd += 2;
+                playerSpd += 0.5;
                 setLevelCounter(lvlCounter);
                 setGateSpeed(gateSpd);
                 setPlayerSpeed(playerSpd);
@@ -258,6 +245,7 @@ export const GameCanvas = ({ orca }: Props) => {
             }
           }
           //Collisions
+
           let deltaPx = player.px - gate.px;
           let deltaPy = player.py - gate.py;
           let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
@@ -269,6 +257,26 @@ export const GameCanvas = ({ orca }: Props) => {
             cleared = true;
             setGateCleared(cleared);
           }
+          //Animation Logic
+          if (Environment.frame < 2) {
+            Environment.frame += 0.001;
+          } else {
+            Environment.frame = 0;
+          }
+          if (animCounter < animRate) {
+            animCounter += 1;
+          } 
+          if (animCounter >= animRate) {
+            for (const item in spOrca) {
+              if (spOrca[item]['frame'] < 10) {
+                spOrca[item]['frame'] += 1;
+              }
+              if (spOrca[item]['frame'] >= 10) {
+                spOrca[item]['frame'] = 0;
+              }
+            }
+            animCounter = 0;
+          }
           lag -= simFrameDuration;
         }
 
@@ -278,6 +286,9 @@ export const GameCanvas = ({ orca }: Props) => {
           if (!ctx) throw new Error("error, canvas 2d context not found");
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.imageSmoothingEnabled = false;
+
+          drawSprite(ctx, Environment, 2)
+
           /* draw player collider
           ctx.beginPath();
           ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
@@ -285,17 +296,6 @@ export const GameCanvas = ({ orca }: Props) => {
           ctx.fill();
           ctx.closePath();
           */
-          ctx.drawImage(
-            Environment,
-            bgScroll,
-            0,
-            400,
-            300,
-            0,
-            0,
-            800,
-            600
-          );
 
           ctx.beginPath();
           ctx.arc(gate.px, gate.py, gate.radius, 0, Math.PI*2);
@@ -303,61 +303,11 @@ export const GameCanvas = ({ orca }: Props) => {
           ctx.fill();
           ctx.closePath();
 
-          ctx.drawImage(
-            Body,
-            0,
-            0,
-            32,
-            19,
-            player.px + (2 - spriteOffsetX) * imgScale,
-            player.py + (16 - spriteOffsetY) * imgScale,
-            32 * imgScale,
-            19 * imgScale
-          );
-          ctx.drawImage(
-            Eyes,
-            0,
-            0,
-            24,
-            32,
-            player.px + (12 - spriteOffsetX) * imgScale,
-            player.py + (4 - spriteOffsetY) * imgScale,
-            24 * imgScale,
-            32 * imgScale
-          );
-          ctx.drawImage(
-            Mouth,
-            0,
-            0,
-            28,
-            20,
-            player.px + (8 - spriteOffsetX) * imgScale,
-            player.py + (16 - spriteOffsetY) * imgScale,
-            28 * imgScale,
-            20 * imgScale
-          );
-          ctx.drawImage(
-            Hat,
-            0,
-            0,
-            28,
-            36,
-            player.px + (8 - spriteOffsetX) * imgScale,
-            player.py + (4 - spriteOffsetY) * imgScale,
-            28 * imgScale,
-            36 * imgScale
-          );
-          ctx.drawImage(
-            Accessory,
-            0,
-            0,
-            40,
-            40,
-            player.px - spriteOffsetX * imgScale,
-            player.py - spriteOffsetY * imgScale,
-            40 * imgScale,
-            40 * imgScale
-          );
+          drawSprite(ctx, spOrca.body, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
+          drawSprite(ctx, spOrca.eyes, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
+          drawSprite(ctx, spOrca.mouth, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
+          drawSprite(ctx, spOrca.hat, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
+          drawSprite(ctx, spOrca.accessory, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
           
           renderStart = timestamp + renderFrameDuration;
         }
