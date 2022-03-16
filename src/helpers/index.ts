@@ -15,9 +15,19 @@ export interface INFT {
 }
 
 export interface SpriteSheet {
-  img: HTMLImageElement
-  sWidth: number
-  sHeight: number
-  dx: number
-  dy: number
+  readonly img: HTMLImageElement
+  readonly sWidth: number
+  readonly sHeight: number
+  readonly dx: number
+  readonly dy: number
+  frame: number
+}
+
+export interface OrcaSprite {
+  background: SpriteSheet
+  body: SpriteSheet
+  hat: SpriteSheet
+  mouth: SpriteSheet
+  eyes: SpriteSheet
+  accessory: SpriteSheet
 }

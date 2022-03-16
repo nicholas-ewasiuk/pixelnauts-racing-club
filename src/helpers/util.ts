@@ -53,3 +53,41 @@ export function pixelateOrcas(nfts: INFT[]) {
     })
   });
 }
+
+export function newSprite(
+  src: string, 
+  width: number, 
+  height: number, 
+  dx: number, 
+  dy: number
+) : SpriteSheet {
+  const img = new Image();
+  img.src = src;
+  const sprite: SpriteSheet = {
+    img: img,
+    sWidth: width,
+    sHeight: height,
+    dx: dx,
+    dy: dy,
+    frame: 0
+  };
+  return sprite;
+}
+
+export function drawSprite(
+  ctx: CanvasRenderingContext2D, 
+  sprite: SpriteSheet, 
+  scale: number
+) {
+  ctx.drawImage(
+   sprite.img,
+   sprite.frame * sprite.sWidth,
+   sprite.frame * sprite.sHeight,  
+   sprite.sWidth,
+   sprite.sHeight,
+   sprite.dx * scale,
+   sprite.dy * scale,
+   sprite.sWidth * scale,
+   sprite.sHeight * scale
+  );
+}

@@ -204,8 +204,8 @@ export const GameCanvas = ({ orca }: Props) => {
         }
         lag += elapsed;
         //Animation Logic
-        if (bgScroll < oEnvironment.sWidth) {
-          bgScroll += 3;
+        if (bgScroll < oEnvironment.sWidth * 2) {
+          bgScroll += 1;
         } else {
           bgScroll = 0;
         }
@@ -377,6 +377,7 @@ export const GameCanvas = ({ orca }: Props) => {
     <div
       css={css`
         display: flex;
+        position: relative;
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -397,14 +398,18 @@ export const GameCanvas = ({ orca }: Props) => {
           ref={canvasRef}>
         </canvas>
       </div>
-      <div>
+      <div 
+        css={css`
+          position: absolute;
+        `}
+      >
         <button
-          css={[button, small]}
+          css={[button]}
           ref={playBtnRef}
           onClick={handlePlay}
           onKeyDown={handlePause}
         >
-          Play
+          Click to Play
         </button>
         { restart &&
           <button 
@@ -436,7 +441,7 @@ const button = css`
   border-radius: 0px;
   width: 200px;
   height: 40px;
-  background: inherit;
+  background: #ffffff;
   font-size: 20px;
   font-family: 'DotGothic16', sans-serif;
   font-weight: inherit;
@@ -450,3 +455,7 @@ const small = css`
   width: 100px;
   height: 40px;
 `;
+
+const absolute = css`
+  position: absolute;
+`
