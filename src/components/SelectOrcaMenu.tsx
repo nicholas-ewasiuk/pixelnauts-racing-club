@@ -35,7 +35,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
       let previous = 0; 
       const simFrameDuration = 1000/simFps;
       let lag = 0;
-      let animRate = 60;
+      let animRate = 30;
       let animCounter = 0;
 
       //Create the images from the selected orcanaut.
@@ -48,7 +48,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
         sAccessory
       ] = orca;
 
-      const sprite: OrcaSprite = {
+      const spOrca: OrcaSprite = {
         background: newSprite(background[sBg],40,40,0,0),
         body: newSprite(body[sBody],32,19,2,16),
         hat: newSprite(hat[sHat],28,36,8,4),
@@ -83,18 +83,17 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
           if (animCounter < animRate) {
             animCounter += 1;
           } 
-          for (const item in sprite) {
-            if (animCounter >= animRate) {
-              if (sprite[item]['frame'] < 10) {
-                sprite[item]['frame'] += 1;
-                console.log(sprite[item]['frame']);
-                animCounter = 0;
+          if (animCounter >= animRate) {
+            for (const item in spOrca) {
+              if (spOrca[item]['frame'] < 10) {
+                spOrca[item]['frame'] += 1;
+                console.log(spOrca[item]['frame']);
               }
-              if (sprite[item]['frame'] >= 10) {
-                sprite[item]['frame'] = 0;
-                animCounter = 0;
+              if (spOrca[item]['frame'] >= 10) {
+                spOrca[item]['frame'] = 0;
               }
             }
+            animCounter = 0;
           } 
           lag -= simFrameDuration;
         }
@@ -106,12 +105,12 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.imageSmoothingEnabled = false;
 
-          drawSprite(ctx, sprite.background, imgScale);
-          drawSprite(ctx, sprite.body, imgScale);
-          drawSprite(ctx, sprite.hat, imgScale);
-          drawSprite(ctx, sprite.mouth, imgScale);
-          drawSprite(ctx, sprite.eyes, imgScale);
-          drawSprite(ctx, sprite.accessory, imgScale);
+          drawSprite(ctx, spOrca.background, imgScale);
+          drawSprite(ctx, spOrca.body, imgScale);
+          drawSprite(ctx, spOrca.hat, imgScale);
+          drawSprite(ctx, spOrca.mouth, imgScale);
+          drawSprite(ctx, spOrca.eyes, imgScale);
+          drawSprite(ctx, spOrca.accessory, imgScale);
         
           renderStart = timestamp + renderFrameDuration;
         }

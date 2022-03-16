@@ -82,7 +82,7 @@ export function drawSprite(
   ctx.drawImage(
    sprite.img,
    sprite.frame * sprite.sWidth,
-   sprite.frame * sprite.sHeight,  
+   0,  
    sprite.sWidth,
    sprite.sHeight,
    sprite.dx * scale,
