@@ -89,31 +89,32 @@ export const GameCanvas = ({ orca }: Props) => {
 
       const keyDownHandler = (e) => {
         e.preventDefault();
-        if(e.key == "Right" || e.key == "ArrowRight") {
+        console.log(e.key);
+        if(e.key == "Right" || e.key == "ArrowRight" || e.key =="d") {
           rightPressed = true;
         }
-        if(e.key == "Left" || e.key == "ArrowLeft") {
+        if(e.key == "Left" || e.key == "ArrowLeft" || e.key =="a") {
           leftPressed = true;
         }
-        if(e.key == "Up" || e.key == "ArrowUp") {
+        if(e.key == "Up" || e.key == "ArrowUp" || e.key =="w") {
           upPressed = true;
         }
-        if(e.key == "Down" || e.key == "ArrowDown") {
+        if(e.key == "Down" || e.key == "ArrowDown" || e.key =="s") {
           downPressed = true;
         }
       }
       const keyUpHandler = (e) => {
         e.preventDefault();
-        if(e.key == "Right" || e.key == "ArrowRight") {
+        if(e.key == "Right" || e.key == "ArrowRight" || e.key =="d") {
           rightPressed = false;
         }
-        if(e.key == "Left" || e.key == "ArrowLeft") {
+        if(e.key == "Left" || e.key == "ArrowLeft" || e.key =="a") {
           leftPressed = false;
         }
-        if(e.key == "Up" || e.key == "ArrowUp") {
+        if(e.key == "Up" || e.key == "ArrowUp" || e.key =="w") {
           upPressed = false;
         }
-        if(e.key == "Down" || e.key == "ArrowDown") {
+        if(e.key == "Down" || e.key == "ArrowDown" || e.key =="s") {
           downPressed = false;
         }
       }
@@ -244,19 +245,6 @@ export const GameCanvas = ({ orca }: Props) => {
               audioRef.current.pause();
             }
           }
-          //Collisions
-
-          let deltaPx = player.px - gate.px;
-          let deltaPy = player.py - gate.py;
-          let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
-          let minPsq = (gate.radius + player.radius) * (gate.radius + player.radius);
-          if (player.py > ground-player.radius) {
-            player.py = ground-player.radius;
-          }
-          if (deltaPsq < minPsq) {
-            cleared = true;
-            setGateCleared(cleared);
-          }
           //Animation Logic
           if (Environment.frame < 2) {
             Environment.frame += 0.001;
@@ -276,6 +264,18 @@ export const GameCanvas = ({ orca }: Props) => {
               }
             }
             animCounter = 0;
+          }
+          //Collisions
+          let deltaPx = player.px - gate.px;
+          let deltaPy = player.py - gate.py;
+          let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
+          let minPsq = (gate.radius + player.radius) * (gate.radius + player.radius);
+          if (player.py > ground-player.radius) {
+            player.py = ground-player.radius;
+          }
+          if (deltaPsq < minPsq) {
+            cleared = true;
+            setGateCleared(cleared);
           }
           lag -= simFrameDuration;
         }
