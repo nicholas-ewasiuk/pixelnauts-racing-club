@@ -20,8 +20,6 @@ export const Body: React.FC = () => {
   const { connection } = useSolana();
   const wallet = useConnectedWallet();
 
-  const audioRef = useRef(null);
-
   const startRace = () => {
     setIsPlaying(!isPlaying);
   };
@@ -42,11 +40,6 @@ export const Body: React.FC = () => {
 
   const playWithout = () => {
     setOrcas([['tokyo','orca','astronaut_helmet','smirk','droopy','none']]);
-  }
-
-  const handleAudioClick = () => {
-    const audio = audioRef;
-    audio.current.play();
   }
 
   const refetchOrcas = useCallback(async () => {
@@ -157,10 +150,6 @@ export const Body: React.FC = () => {
       { isPlaying && orcas &&
         <GameCanvas orcaTraits={orcas[index]}/>
       }
-      <audio
-        ref={audioRef}
-        src={sound}
-      />
     </AppWrapper>
   );
 };

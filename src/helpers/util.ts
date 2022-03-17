@@ -1,28 +1,5 @@
-/* eslint-disable no-use-before-define */
 import { INFT, OrcaSprite } from ".";
 import { Sprite } from ".";
-
-
-export async function okToFailAsync(callback: any, args: any[], wantObject = false) {
-  try {
-    // mandatory await here, can't just pass down (coz we need to catch error in this scope)
-    return await callback(...args);
-  } catch (e) {
-    console.log(`Oh no! ${callback.name} called with ${args} blew up!`);
-    console.log('Full error:', e);
-    return wantObject ? {} : undefined;
-  }
-}
-
-export function okToFailSync(callback: any, args: any[], wantObject = false) {
-  try {
-    return callback(...args);
-  } catch (e) {
-    console.log(`Oh no! ${callback.name} called with ${args} blew up!`);
-    console.log('Full error:', e);
-    return wantObject ? {} : undefined;
-  }
-}
 
 export function filterOrcanauts(nfts: INFT[]): INFT[] {
   return nfts.filter((nft) => {
@@ -166,14 +143,14 @@ export function spawnEnemies(
   dy: number,
   speed: number,
   scale: number,
-  spawnPx: number,
+  spawnPx: [number, number],
   spawnPy: [number, number],
-  spacing: number,
+  radius: number
 ) {
   const sprites: Sprite[] = [];
   for (let i = 0; i <= amount; i++) {
-    const px = Math.random() * spacing + spawnPx;
-    const py = Math.random() * (spawnPy[0]-spawnPy[1]) + spawnPy[1];
+    const px = Math.random() * (spawnPx[1]-spawnPx[0]) + spawnPx[0];
+    const py = Math.random() * (spawnPy[1]-spawnPy[0]) + spawnPy[0];
     sprites.push(newSprite(
       src,
       width,
@@ -184,6 +161,7 @@ export function spawnEnemies(
       scale,
       px,
       py,
+      radius
     ));
   }
   return sprites;

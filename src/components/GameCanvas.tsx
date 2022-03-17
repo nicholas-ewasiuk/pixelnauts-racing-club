@@ -22,43 +22,35 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   const [ isPaused, setIsPaused ] = useState<boolean>(false);
   const [ gameState, setGameState ] = useState<number>(0);
   const [ restart, setRestart ] = useState<boolean>(false);
-
-  const [ showPlayBtn, setShowPlayBtn ] = useState<number>(0);
+  const [ isHelpOpen, setIsHelpOpen ] = useState<boolean>(false);
+  const [ isCreditsOpen, setIsCreditsOpen ] = useState<boolean>(false);
 
   const audioRef = useRef(null);
-  const playBtnRef = useRef(null);
-
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   //const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const handlePlay = (e) => {
     setGameState(1);
-    playBtnRef.current.style.opacity = showPlayBtn;
+    audioRef.current.load();
     audioRef.current.play();
-    //console.log(e.target);
   }
 
   const handleRestart = (e) => {
-    //setGatePx(800); 
-    //setGateSpeed(5); 
     setRestart(false); 
     setGameState(0);
-    playBtnRef.current.style.opacity = 100;
   }
 
   const handlePause = (e) => {
-    if (e.key == "Escape") {
-      setIsPaused(!isPaused);
-      if (isPaused) {
-        audioRef.current.play();
-      } else {
-        audioRef.current.pause();
-      }
+    setIsPaused(!isPaused);
+    if (isPaused) {
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
     }
   }
+
   
-  //animation loop structure 
+  //requestAnimationFrame loop structure 
   //https://blog.jakuba.net/request-animation-frame-and-use-effect-vs-use-layout-effect/
   useLayoutEffect(() => {
     if (!isPaused && canvasRef.current && gameState) {
@@ -111,7 +103,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       canvas.height = 600;
 
       let ground = canvas.height;
-      let lvlCounter = levelCounter;
+
       let lvlRestart = restart;
 
       let renderFps = 120;
@@ -122,13 +114,20 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       let previous = 0; 
       const simFrameDuration = 1000/simFps;
       let lag = 0;
+
+      let lvlRate = 900;
       let animRate = 30;
+      let scrollSpd = 0.001;
+
       let animCounter = 0;
+      let lvlCounter = levelCounter;
+  
 
       const scale = 2;
       let enemyCount = 7;
-      const enemySpacing = 800;
-      let enemySpeed = 7;
+      const enemySpacing = 1500;
+      let enemySpeed = 6;
+      let enemySpdIncrease = 0.7;
 
       //Create the images from the selected orcanaut.
       const [
@@ -156,16 +155,16 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       const environment = newSprite(world.sandy_bottom,400,300,0,0,undefined,scale);
       const rugs = spawnEnemies(
         enemyCount, 
-        enemies.rug,
+        enemies.rug_lrg,
+        40,
         32,
-        16,
         0,
         0,
         6,
         scale,
-        canvas.width,
-        [canvas.height, canvas.height/3],
-        enemySpacing,
+        [canvas.width, canvas.width+enemySpacing],
+        [canvas.height/6+16, canvas.height-16],
+        22
       )
 
       //Game Loop
@@ -201,14 +200,27 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           //Enemy Logic
           for (let i = 0; i < rugs.length; i++) {
             rugs[i].px -= rugs[i].speed;
-            if (rugs[i].px < 0) {
+            if (rugs[i].px+rugs[i].radius < 0) {
                 rugs[i].px = Math.random() * enemySpacing + canvas.width;
-                rugs[i].py = Math.random() * (canvas.height - canvas.height*1/3 - 70) + canvas.height*1/3;
+                rugs[i].py = Math.random() * (canvas.height - canvas.height/6) + canvas.height/6-rugs[i].radius;
             }
+          }
+          //Level Logic
+          if (lvlCounter < lvlRate) {
+            lvlCounter += 1;
+          }
+          if (lvlCounter >= lvlRate) {
+            for (let i = 0; i < rugs.length; i++) {
+              rugs[i].speed += enemySpdIncrease;
+            }
+            orca.speed += 0.2;
+            animRate *= .95;
+            scrollSpd *= 1.15;
+            lvlCounter = 0;
           }
           //Animation Logic
           if (environment.frame < 2) {
-            environment.frame += 0.001;
+            environment.frame += scrollSpd;
           } else {
             environment.frame = 0;
           }
@@ -248,8 +260,8 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           if (orca.py > ground-orca.radius) {
             orca.py = ground-orca.radius;
           }
-          if (orca.py < canvas.height/3+orca.radius) {
-            orca.py = canvas.height/3+orca.radius;
+          if (orca.py < canvas.height/6+orca.radius) {
+            orca.py = canvas.height/6+orca.radius;
           }
           lag -= simFrameDuration;
         }
@@ -263,27 +275,25 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
 
           drawSprite(ctx, environment, 2)
 
-          // Draw player collider
+          /*/ Draw player collider
           ctx.beginPath();
           ctx.arc(orca.px, orca.py, orca.radius, 0, Math.PI*2);
           ctx.fillStyle = "#000000";
           ctx.fill();
           ctx.closePath();
-
-
-
+          //*/
           drawOrcaGameSprite(ctx, orca);
+
           for (let i = 0; i < rugs.length; i++) {
-            /*Draw enemy colliders
+            /*/Draw enemy colliders
             ctx.beginPath();
             ctx.arc(rugs[i].px, rugs[i].py, rugs[i].radius, 0, Math.PI*2);
             ctx.fillStyle = "#e75569";
             ctx.fill();
             ctx.closePath();
-            */
-            drawSprite(ctx, rugs[i],32,20);
+            //*/
+            drawSprite(ctx, rugs[i],40,40);
           }
-
           renderStart = timestamp + renderFrameDuration;
         }
         previous = timestamp;
@@ -323,34 +333,84 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           ref={canvasRef}>
         </canvas>
       </div>
-      <div 
+      <div
         css={css`
-          position: absolute;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-evenly;
+          width: 750px;
         `}
       >
         <button
-          css={[button]}
-          ref={playBtnRef}
-          onClick={handlePlay}
-          onKeyDown={handlePause}
+          css={[button, small]}
+          onClick={() => setIsHelpOpen(!isHelpOpen)}
         >
-          Click to Play
+          Help
         </button>
+        { gameState == 0 && 
+          <button
+            css={[button]}
+            onClick={handlePlay}
+          >
+            Click to Play
+          </button>
+        }
+        { gameState == 1 && !restart && 
+          <button
+            css={[button, small]}
+            onClick={handlePause}
+          >
+            {isPaused ? "Resume" : "Pause"}
+          </button>
+        }
         { restart &&
           <button 
             css={[button, small]}
             disabled={!restart}
             onClick={handleRestart}
           >
-            Restart
+            Restart?
           </button>
         }
-        <audio
-          ref={audioRef}
-          src={sound}
-          loop
-        />
+        <button
+          css={[button, small]}
+          onClick={() => setIsCreditsOpen(!isCreditsOpen)}
+        >
+          Credits
+        </button>   
       </div>
+      { isHelpOpen &&
+        <p 
+          css={css`
+            text-align: center;
+            font-size: 24px
+          `}
+        >
+          Arrow / WASD keys to move.<br></br>
+          Don't get rugged!
+        </p>
+      }
+      { isCreditsOpen &&
+        <p 
+          css={css`
+            text-align: center;
+            font-size: 16px;
+          `}
+        >
+          Nick Ewasiuk - Developer<br></br>
+          Gavin Leeper - Music<br></br>
+          Christine Vautour - Environment Artist<br></br>
+          Special Thanks<br></br>
+          Ade Balogun - Pixelnauts Artwork<br></br>
+          The entire Orca team! - Orcanauts NFT Project<br></br>
+          @_ilmoi - nftarmory.me repo was an invaluable resource<br></br>
+          @javidx9 - Programming collisions and game engines youtube videos<br></br>
+        </p>
+      }
+      <audio
+        ref={audioRef}
+        src={sound}
+      />
     </div>
   );
 }
@@ -380,7 +440,3 @@ const small = css`
   width: 100px;
   height: 40px;
 `;
-
-const absolute = css`
-  position: absolute;
-`
