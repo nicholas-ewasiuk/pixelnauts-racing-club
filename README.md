@@ -4,9 +4,9 @@
 
 An endless runner browser game utilizing the <a href=https://orcanauts.orca.so>Orcanauts</a> NFT project drawn by <a href=https://twitter.com/corcorarium>@corcorarium</a>, and the <a href=https://github.com/Baloguna16/pixelnaut-assets>Pixelnauts</a> artwork by <a href=https://twitter.com/Ade_in_myLife>Ade Balogun</a>.<br>
 
-Music by <a href=https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos>Gavin Leeper</a><br>
+##### <div align="center">Music by <a href=https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos>Gavin Leeper</a><br>
 
-Environment Art by <a href=https://www.artstation.com/fruitcakette>Christine Vautour</a><br>
+##### Environment Art by <a href=https://www.artstation.com/fruitcakette>Christine Vautour</a><br></div>
 
 ## How to play
 
@@ -35,7 +35,6 @@ Franks laboratory - <a href=https://youtu.be/EYf_JwzwTlQ>How to Make a Game with
 Special thanks to the entire team at <a href=https://www.orca.so>Orca</a> for creating the <a href=https://orcanauts.orca.so>Orcanauts</a>!
 
 Built using:
- 
 <a href=https://github.com/GokiProtocol/walletkit>GokiProtocol/walletkit</a><br>
 <a href=https://github.com/saber-hq/saber-common>saber-hq/saber-common</a><br>
 <a href=https://github.com/metaplex-foundation>Metaplex</a><br>
