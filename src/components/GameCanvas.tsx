@@ -51,6 +51,9 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
     setOrca(null);
     setRugs(null);
     setEnvironment(null);
+    setAnimRate(30);
+    setScrollSpd(0.001);
+    setLevelCounter(0);
   }
 
   const handlePause = (e) => {
