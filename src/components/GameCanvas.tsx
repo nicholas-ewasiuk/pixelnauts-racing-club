@@ -20,7 +20,6 @@ type Props = {
 export const GameCanvas = ({ orcaTraits }: Props) => {
   const [ gameState, setGameState ] = useState<number>(0);
   const [ AnimRate, setAnimRate ] = useState<number>(30);
-  const [ AnimCounter, setAnimCounter ] = useState<number>(0);
   const [ ScrollSpd, setScrollSpd ] = useState<number>(0.001);
   const [ score, setScore ] = useState<number>(0);
   const [ levelCounter, setLevelCounter ] = useState<number>(0);
@@ -135,7 +134,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       let animRate = AnimRate;
       let scrollSpd = ScrollSpd;
 
-      let animCounter = AnimCounter;
+      let animCounter = 0;
       let lvlCounter = levelCounter;
   
 
