@@ -18,20 +18,20 @@ type Props = {
 }
 
 export const GameCanvas = ({ orcaTraits }: Props) => {
-  const [ levelCounter, setLevelCounter ] = useState<number>(0);
-  const [ isPaused, setIsPaused ] = useState<boolean>(false);
   const [ gameState, setGameState ] = useState<number>(0);
-  const [ restart, setRestart ] = useState<boolean>(false);
-  const [ isHelpOpen, setIsHelpOpen ] = useState<boolean>(false);
-  const [ isCreditsOpen, setIsCreditsOpen ] = useState<boolean>(false);
-  const [ isIntroOpen, setIsIntroOpen ] = useState<boolean>(true);
   const [ AnimRate, setAnimRate ] = useState<number>(30);
   const [ AnimCounter, setAnimCounter ] = useState<number>(0);
   const [ ScrollSpd, setScrollSpd ] = useState<number>(0.001);
   const [ score, setScore ] = useState<number>(0);
+  const [ levelCounter, setLevelCounter ] = useState<number>(0);
   const [ Orca, setOrca ] = useState<OrcaSprite | null>(null);
   const [ Rugs, setRugs ] = useState<Sprite[] | null>(null);
   const [ Environment, setEnvironment ] = useState<Sprite | null>(null);
+  const [ restart, setRestart ] = useState<boolean>(false);
+  const [ isHelpOpen, setIsHelpOpen ] = useState<boolean>(false);
+  const [ isCreditsOpen, setIsCreditsOpen ] = useState<boolean>(false);
+  const [ isIntroOpen, setIsIntroOpen ] = useState<boolean>(true);
+  const [ isPaused, setIsPaused ] = useState<boolean>(false);
 
   const audioRef = useRef(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -454,15 +454,16 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         </button>   
       </div>
       { isHelpOpen &&
-        <p 
+        <ul
           css={css`
+            list-style: none;
             text-align: center;
             font-size: 24px
           `}
         >
-          Arrow / W A S D keys to move.<br></br>
-          Don't get rugged!
-        </p>
+          <li>Arrow / W A S D keys to move.</li>
+          <li>Avoid the rugs!</li>
+        </ul>
       }
       { isCreditsOpen &&
         <section

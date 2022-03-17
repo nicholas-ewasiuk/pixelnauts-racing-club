@@ -134,17 +134,18 @@ export const Body: React.FC = () => {
         </button>
       }
       { isHelpOpen && !isPlaying &&
-        <p 
+        <ul 
           css={css`
+            list-style: none;
             text-align: center;
             font-size: 24px
           `}
         >
-          This game utilizes the Orcanauts NFTs.<br></br>
-          You can adopt one at <a href="https://magiceden.io/marketplace/orcanauts">Magic Eden</a>.<br></br>
-          Arrow / W A S D keys to move<br></br>
-          Don't get rugged!
-        </p>
+          <li>This game utilizes the Orcanauts NFTs</li>
+          <li>You can adopt one at <a href="https://magiceden.io/marketplace/orcanauts">Magic Eden</a></li>
+          <li>Use Arrow / W A S D keys to move</li>
+          <li>Avoid the rugs!</li>
+        </ul>
       }
       { isPlaying && orcas &&
         <GameCanvas orcaTraits={orcas[index]}/>
