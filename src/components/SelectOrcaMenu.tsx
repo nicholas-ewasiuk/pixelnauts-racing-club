@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { newOrcaSprite, drawMenuOrcaSprite } from '../helpers/util';
+import { newOrcaSprite, drawOrcaMenuSprite } from '../helpers/util';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
@@ -11,14 +11,14 @@ import mouth from '../assets/pixelnauts/mouth';
 
 
 type Props = {
-  orca: string[] | null,
+  orcaTraits: string[] | null,
 }
 
-export const SelectOrcaMenu = ({ orca }: Props) => {
+export const SelectOrcaMenu = ({ orcaTraits }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   useLayoutEffect(() => {
-    if (canvasRef.current && orca) {
+    if (canvasRef.current && orcaTraits) {
       //Initial state
       let timerId: number;
       const canvas = canvasRef.current;
@@ -45,18 +45,18 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
         sMouth,
         sEyes,
         sAccessory
-      ] = orca;
+      ] = orcaTraits;
 
-      const Orca = newOrcaSprite(
+      const orca = newOrcaSprite(
         background[sBg],
         body[sBody],
         hat[sHat],
         mouth[sMouth],
         eyes[sEyes],
         accessory[sAccessory],
+        undefined,
+        6
       );
-
-      const imgScale = 6;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -80,13 +80,13 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             animCounter += 1;
           } 
           if (animCounter >= animRate) {
-            for (const item in Orca) {
-              if (Orca[item]['frame'] < 10) {
-                Orca[item]['frame'] += 1;
-                console.log(Orca[item]['frame']);
+            for (const item in orca) {
+              if (orca[item]['frame'] < 10) {
+                orca[item]['frame'] += 1;
+                console.log(orca[item]['frame']);
               }
-              if (Orca[item]['frame'] >= 10) {
-                Orca[item]['frame'] = 0;
+              if (orca[item]['frame'] >= 10) {
+                orca[item]['frame'] = 0;
               }
             }
             animCounter = 0;
@@ -101,7 +101,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.imageSmoothingEnabled = false;
 
-          drawMenuOrcaSprite(ctx, Orca, imgScale);
+          drawOrcaMenuSprite(ctx, orca);
         
           renderStart = timestamp + renderFrameDuration;
         }
@@ -110,7 +110,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
       //Cleanup function triggers when useLayoutEffect is called again.
       return () => cancelAnimationFrame(timerId);
     }
-  }, [canvasRef, orca]);
+  }, [canvasRef, orcaTraits]);
 
   return (
     <div

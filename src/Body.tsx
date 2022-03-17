@@ -117,7 +117,7 @@ export const Body: React.FC = () => {
             >
               Previous
             </button>
-            <SelectOrcaMenu orca={orcas[index]} />
+            <SelectOrcaMenu orcaTraits={orcas[index]} />
             <button 
               css={[button, small]}
               onClick={selectNext}
@@ -155,7 +155,7 @@ export const Body: React.FC = () => {
         </p>
       }
       { isPlaying && orcas &&
-        <GameCanvas orca={orcas[index]}/>
+        <GameCanvas orcaTraits={orcas[index]}/>
       }
       <audio
         ref={audioRef}

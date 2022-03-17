@@ -21,6 +21,7 @@ export interface Sprite {
   readonly dx: number
   readonly dy: number
   speed: number
+  scale: number
   px: number
   py: number
   radius: number
@@ -35,6 +36,7 @@ export interface OrcaSprite {
   readonly eyes: Sprite
   readonly accessory: Sprite
   speed: number
+  scale: number
   px: number
   py: number
   radius: number
