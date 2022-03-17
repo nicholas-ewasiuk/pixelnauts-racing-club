@@ -25,8 +25,6 @@ type Props = {
 
 export const GameCanvas = ({ orcaTraits }: Props) => {
   const [ gameState, setGameState ] = useState<number>(0);
-  const [ AnimRate, setAnimRate ] = useState<number>(30);
-  const [ ScrollSpd, setScrollSpd ] = useState<number>(0.001);
   const [ score, setScore ] = useState<number>(0);
   const [ levelCounter, setLevelCounter ] = useState<number>(0);
   const [ Orca, setOrca ] = useState<OrcaSprite | null>(null);
@@ -37,6 +35,9 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   const [ isCreditsOpen, setIsCreditsOpen ] = useState<boolean>(false);
   const [ isIntroOpen, setIsIntroOpen ] = useState<boolean>(true);
   const [ isPaused, setIsPaused ] = useState<boolean>(false);
+  //Background scroll and sprite animation speed
+  const [ AnimRate, setAnimRate ] = useState<number>(30);
+  const [ ScrollSpd, setScrollSpd ] = useState<number>(0.001);
 
   const audioRef = useRef(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -145,12 +146,11 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       let animCounter = 0;
       let lvlCounter = levelCounter;
   
-
       const scale = 2;
       let enemyCount = 10;
       const enemySpacing = 1000;
       let enemySpeed = 6;
-      let enemySpdIncrease = 0.8;
+      let enemySpdIncrease = 0.7;
 
       //Create the images from the selected orcanaut.
       const [
@@ -192,7 +192,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           32,
           0,
           0,
-          6,
+          enemySpeed,
           scale,
           [canvas.width, canvas.width+enemySpacing],
           [canvas.height/6+16, canvas.height-16],
