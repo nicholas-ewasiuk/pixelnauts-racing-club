@@ -150,6 +150,14 @@ export const Body: React.FC = () => {
       { isPlaying && orcas &&
         <GameCanvas orcaTraits={orcas[index]}/>
       }
+      <p 
+        css={css`
+          position: absolute;
+          bottom: 0;`
+        }
+      >
+        Open-Source on <a href="https://github.com/nicholas-ewasiuk/pixelnauts-racing-club">Github</a>
+      </p>
     </AppWrapper>
   );
 };

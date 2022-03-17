@@ -419,7 +419,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       >
         <button
           css={[button, small]}
-          onClick={() => setIsHelpOpen(!isHelpOpen)}
+          onClick={() => {setIsHelpOpen(!isHelpOpen); setIsCreditsOpen(false);}}
         >
           Help
         </button>
@@ -450,7 +450,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         }
         <button
           css={[button, small]}
-          onClick={() => setIsCreditsOpen(!isCreditsOpen)}
+          onClick={() => {setIsCreditsOpen(!isCreditsOpen); setIsHelpOpen(false);}}
         >
           Credits
         </button>   
