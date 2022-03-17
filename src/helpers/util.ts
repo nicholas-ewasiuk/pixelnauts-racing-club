@@ -156,3 +156,35 @@ export function drawOrcaMenuSprite(
   drawSprite(ctx, orcaSprite.hat, orcaSprite.px, orcaSprite.py);
   drawSprite(ctx, orcaSprite.accessory, orcaSprite.px, orcaSprite.py);
 }
+
+export function spawnEnemies(
+  amount: number,
+  src: string,
+  width: number,
+  height: number,
+  dx: number,
+  dy: number,
+  speed: number,
+  scale: number,
+  spawnPx: number,
+  spawnPy: [number, number],
+  spacing: number,
+) {
+  const sprites: Sprite[] = [];
+  for (let i = 0; i <= amount; i++) {
+    const px = Math.random() * spacing + spawnPx;
+    const py = Math.random() * (spawnPy[0]-spawnPy[1]) + spawnPy[1];
+    sprites.push(newSprite(
+      src,
+      width,
+      height,
+      dx,
+      dy,
+      speed,
+      scale,
+      px,
+      py,
+    ));
+  }
+  return sprites;
+}
