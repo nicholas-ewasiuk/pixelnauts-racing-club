@@ -10,23 +10,17 @@ import hat from '../assets/pixelnauts/hat';
 import mouth from '../assets/pixelnauts/mouth';
 import sound from "url:../assets/main-theme.ogg"
 import world from '../assets/environment';
-import { OrcaSprite, SpriteSheet } from '../helpers';
-import { drawSprite, newSprite } from '../helpers/util';
+import { drawGameOrcaSprite, drawSprite, newOrcaSprite, newSprite } from '../helpers/util';
 
 type Props = {
   orca: string[];
 }
 
 export const GameCanvas = ({ orca }: Props) => {
-  const [ playerPx, setPlayerPx ] = useState<number>(50);
-  const [ playerPy, setPlayerPy ] = useState<number>(300);
-  const [ playerRadius, setPlayerRadius ] = useState<number>(20);
-  const [ playerSpeed, setPlayerSpeed ] = useState<number>(3);
   const [ gatePx, setGatePx] = useState<number>(800);
   const [ gatePy, setGatePy] = useState<number>(300);
   const [ gateRadius, setGateRadius ] = useState<number>(10);
   const [ gateSpeed, setGateSpeed ] = useState<number>(5);
-  const [ gateCleared, setGateCleared ] = useState<boolean>(true);
   const [ levelCounter, setLevelCounter ] = useState<number>(0);
   const [ isPaused, setIsPaused ] = useState<boolean>(false);
   const [ gameState, setGameState ] = useState<number>(0);
@@ -126,13 +120,6 @@ export const GameCanvas = ({ orca }: Props) => {
       canvas.width = 800;
       canvas.height = 600;
 
-      const player: CircleCollider = {
-        px: playerPx,
-        py: playerPy,
-        radius: playerRadius,
-        id: "playerOne",
-      };
-
       const gate: CircleCollider = {
         px: gatePx,
         py: gatePy,
@@ -140,10 +127,8 @@ export const GameCanvas = ({ orca }: Props) => {
         id: "gate",
       }
 
-      let playerSpd = playerSpeed; 
       let gateSpd = gateSpeed;
       let ground = canvas.height;
-      let cleared = gateCleared;
       let lvlCounter = levelCounter;
       let lvlRestart = restart;
 
@@ -158,6 +143,8 @@ export const GameCanvas = ({ orca }: Props) => {
       let animRate = 30;
       let animCounter = 0;
 
+      const imgScale = 2;
+
       //Create the images from the selected orcanaut.
       const [
         sBg,
@@ -168,20 +155,21 @@ export const GameCanvas = ({ orca }: Props) => {
         sAccessory
       ] = orca;
 
-      const spOrca: OrcaSprite = {
-        background: newSprite(background[sBg],40,40,0,0),
-        body: newSprite(body[sBody],32,19,2,16),
-        hat: newSprite(hat[sHat],28,36,8,4),
-        mouth: newSprite(mouth[sMouth],28,20,8,16),
-        eyes: newSprite(eyes[sEyes],24,32,12,4),
-        accessory: newSprite(accessory[sAccessory],40,40,0,0),
-      }
+      const Orca = newOrcaSprite(
+        background[sBg],
+        body[sBody],
+        hat[sHat],
+        mouth[sMouth],
+        eyes[sEyes],
+        accessory[sAccessory],
+        3,
+        100,
+        50
+      );
+
 
       const Environment = newSprite(world.sandy_bottom,400,300,0,0);
 
-      const spriteOffsetX = 50;
-      const spriteOffsetY = 50;
-      const imgScale = 2;
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -202,48 +190,25 @@ export const GameCanvas = ({ orca }: Props) => {
         while (lag >= simFrameDuration) {
           // Player Logic
           if (rightPressed) {
-            setPlayerPx(x => x + playerSpd);
-            player.px += playerSpd;
+            Orca.px += Orca.speed;
           }
           if (leftPressed) {
-            setPlayerPx(x => x - playerSpd);
-            player.px -= playerSpd;
+            Orca.px -= Orca.speed;
           }
           if (upPressed) {
-            setPlayerPy(x => x - playerSpd);
-            player.py -= playerSpd;
+            Orca.py -= Orca.speed;
           }
           if (downPressed) {
-            setPlayerPy(x => x + playerSpd);
-            player.py += playerSpd;
+            Orca.py += Orca.speed;
           }
           //Gate Logic
           gate.px -= gateSpd;
           setGatePx(gate.px);
           if (gate.px < 0) {
-            if (cleared) {
               gate.px = canvas.width;
               gate.py = Math.random() * (canvas.height - canvas.height*1/3 - 70) + canvas.height*1/3;
-              cleared = false;
               setGatePx(gate.px);
               setGatePy(gate.py);
-              setGateCleared(cleared);
-              if (lvlCounter > 10) {
-                lvlCounter = 0;
-                gateSpd += 2;
-                playerSpd += 0.5;
-                setLevelCounter(lvlCounter);
-                setGateSpeed(gateSpd);
-                setPlayerSpeed(playerSpd);
-              } else {
-                lvlCounter += 1;
-                setLevelCounter(lvlCounter);
-              }
-            } else if (!lvlRestart) {
-              setRestart(true);
-              lvlRestart = true;
-              audioRef.current.pause();
-            }
           }
           //Animation Logic
           if (Environment.frame < 2) {
@@ -255,27 +220,29 @@ export const GameCanvas = ({ orca }: Props) => {
             animCounter += 1;
           } 
           if (animCounter >= animRate) {
-            for (const item in spOrca) {
-              if (spOrca[item]['frame'] < 10) {
-                spOrca[item]['frame'] += 1;
+            for (const item in Orca) {
+              if (Orca[item]['frame'] < 10) {
+                Orca[item]['frame'] += 1;
               }
-              if (spOrca[item]['frame'] >= 10) {
-                spOrca[item]['frame'] = 0;
+              if (Orca[item]['frame'] >= 10) {
+                Orca[item]['frame'] = 0;
               }
             }
             animCounter = 0;
           }
           //Collisions
-          let deltaPx = player.px - gate.px;
-          let deltaPy = player.py - gate.py;
+          let deltaPx = Orca.px - gate.px;
+          let deltaPy = Orca.py - gate.py;
           let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
-          let minPsq = (gate.radius + player.radius) * (gate.radius + player.radius);
-          if (player.py > ground-player.radius) {
-            player.py = ground-player.radius;
+          let minPsq = (gate.radius + Orca.radius) * (gate.radius + Orca.radius);
+          if (Orca.py > ground-Orca.radius) {
+            Orca.py = ground-Orca.radius;
           }
+          //Game lost condition below
           if (deltaPsq < minPsq) {
-            cleared = true;
-            setGateCleared(cleared);
+            setRestart(true);
+            lvlRestart = true;
+            audioRef.current.pause();
           }
           lag -= simFrameDuration;
         }
@@ -289,9 +256,9 @@ export const GameCanvas = ({ orca }: Props) => {
 
           drawSprite(ctx, Environment, 2)
 
-          /* draw player collider
+          /* Draw player collider
           ctx.beginPath();
-          ctx.arc(player.px, player.py, player.radius, 0, Math.PI*2);
+          ctx.arc(Orca.px, Orca.py, Orca.radius, 0, Math.PI*2);
           ctx.fillStyle = "#000000";
           ctx.fill();
           ctx.closePath();
@@ -303,12 +270,8 @@ export const GameCanvas = ({ orca }: Props) => {
           ctx.fill();
           ctx.closePath();
 
-          drawSprite(ctx, spOrca.body, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
-          drawSprite(ctx, spOrca.eyes, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
-          drawSprite(ctx, spOrca.mouth, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
-          drawSprite(ctx, spOrca.hat, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
-          drawSprite(ctx, spOrca.accessory, imgScale, player.px-spriteOffsetX, player.py-spriteOffsetY);
-          
+          drawGameOrcaSprite(ctx, Orca, imgScale);
+
           renderStart = timestamp + renderFrameDuration;
         }
         previous = timestamp;

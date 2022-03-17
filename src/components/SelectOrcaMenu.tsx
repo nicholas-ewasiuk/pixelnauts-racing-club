@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { OrcaSprite, SpriteSheet } from '../helpers';
-import { newSprite, drawSprite } from '../helpers/util';
+import { newOrcaSprite, drawMenuOrcaSprite } from '../helpers/util';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
@@ -48,14 +47,14 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
         sAccessory
       ] = orca;
 
-      const spOrca: OrcaSprite = {
-        background: newSprite(background[sBg],40,40,0,0),
-        body: newSprite(body[sBody],32,19,2,16),
-        hat: newSprite(hat[sHat],28,36,8,4),
-        mouth: newSprite(mouth[sMouth],28,20,8,16),
-        eyes: newSprite(eyes[sEyes],24,32,12,4),
-        accessory: newSprite(accessory[sAccessory],40,40,0,0),
-      }
+      const Orca = newOrcaSprite(
+        background[sBg],
+        body[sBody],
+        hat[sHat],
+        mouth[sMouth],
+        eyes[sEyes],
+        accessory[sAccessory],
+      );
 
       const imgScale = 6;
 
@@ -81,13 +80,13 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
             animCounter += 1;
           } 
           if (animCounter >= animRate) {
-            for (const item in spOrca) {
-              if (spOrca[item]['frame'] < 10) {
-                spOrca[item]['frame'] += 1;
-                console.log(spOrca[item]['frame']);
+            for (const item in Orca) {
+              if (Orca[item]['frame'] < 10) {
+                Orca[item]['frame'] += 1;
+                console.log(Orca[item]['frame']);
               }
-              if (spOrca[item]['frame'] >= 10) {
-                spOrca[item]['frame'] = 0;
+              if (Orca[item]['frame'] >= 10) {
+                Orca[item]['frame'] = 0;
               }
             }
             animCounter = 0;
@@ -102,12 +101,7 @@ export const SelectOrcaMenu = ({ orca }: Props) => {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.imageSmoothingEnabled = false;
 
-          drawSprite(ctx, spOrca.background, imgScale);
-          drawSprite(ctx, spOrca.body, imgScale);
-          drawSprite(ctx, spOrca.hat, imgScale);
-          drawSprite(ctx, spOrca.mouth, imgScale);
-          drawSprite(ctx, spOrca.eyes, imgScale);
-          drawSprite(ctx, spOrca.accessory, imgScale);
+          drawMenuOrcaSprite(ctx, Orca, imgScale);
         
           renderStart = timestamp + renderFrameDuration;
         }

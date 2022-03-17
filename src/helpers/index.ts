@@ -14,20 +14,28 @@ export interface INFT {
   metadataExternal?: any; 
 }
 
-export interface SpriteSheet {
+export interface Sprite {
   readonly img: HTMLImageElement
-  readonly sWidth: number
-  readonly sHeight: number
+  readonly width: number
+  readonly height: number
   readonly dx: number
   readonly dy: number
+  speed: number
+  px: number
+  py: number
+  radius: number
   frame: number
 }
 
 export interface OrcaSprite {
-  background: SpriteSheet
-  body: SpriteSheet
-  hat: SpriteSheet
-  mouth: SpriteSheet
-  eyes: SpriteSheet
-  accessory: SpriteSheet
+  readonly background: Sprite
+  readonly body: Sprite
+  readonly hat: Sprite
+  readonly mouth: Sprite
+  readonly eyes: Sprite
+  readonly accessory: Sprite
+  speed: number
+  px: number
+  py: number
+  radius: number
 }
