@@ -174,7 +174,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       if (!Rugs) {
         rugs = spawnEnemies(
           enemyCount, 
-          enemies.rug_lrg,
+          [enemies.rug_lrg, enemies.rug_lrg_blue, enemies.rug_lrg_purple],
           40,
           32,
           0,
@@ -271,7 +271,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             let deltaPy = orca.py - rugs[i].py;
             let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
             let minPsq = (rugs[i].radius + orca.radius) * (rugs[i].radius + orca.radius);
-            //Game Lost Condition
+            /*/Game Lost Condition
             if (deltaPsq < minPsq) {
               setRestart(true);
               lvlRestart = true;
@@ -284,6 +284,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
               document.removeEventListener("keydown", keyDownHandler, false);
               audioRef.current.pause();
             }
+            //*/
           }
           if (orca.py > ground-orca.radius) {
             orca.py = ground-orca.radius;
@@ -469,9 +470,9 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           `}
         >
           <ul>
-            <li>Nick Ewasiuk - <a href="https://github.com/nicholas-ewasiuk">Developer</a></li>
+            <li>Nick Ewasiuk - <a href="https://github.com/nicholas-ewasiuk">Programming</a></li>
             <li>Gavin Leeper - <a href="https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos">Music</a></li>
-            <li>Christine Vautour - <a href="https://www.artstation.com/fruitcakette">Environment Artist</a></li>
+            <li>Christine Vautour - <a href="https://www.artstation.com/fruitcakette">Environment Art</a></li>
           </ul>
           <h4>Special Thanks</h4>
           <ul>

@@ -85,10 +85,10 @@ export const Body: React.FC = () => {
       }
       {!isPlaying && !orcas && 
         <button
-          css={[button]}
+          css={[button, tall]}
           onClick={playWithout}
         >
-          Borrow the dolphin
+          Borrow Training Dolphin
         </button>
       }
       { orcas && !isPlaying &&
@@ -184,4 +184,9 @@ const button = css`
 const small = css`
   width: 100px;
   height: 40px;
+`;
+
+const tall = css`
+  width: 200px;
+  height: 80px;
 `;

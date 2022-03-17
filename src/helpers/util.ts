@@ -136,7 +136,7 @@ export function drawOrcaMenuSprite(
 
 export function spawnEnemies(
   amount: number,
-  src: string,
+  src: string[],
   width: number,
   height: number,
   dx: number,
@@ -148,11 +148,12 @@ export function spawnEnemies(
   radius: number
 ) {
   const sprites: Sprite[] = [];
-  for (let i = 0; i <= amount; i++) {
+  const index = Math.floor(amount/src.length);
+  function spawn(i: number) {
     const px = Math.random() * (spawnPx[1]-spawnPx[0]) + spawnPx[0];
     const py = Math.random() * (spawnPy[1]-spawnPy[0]) + spawnPy[0];
     sprites.push(newSprite(
-      src,
+      src[i],
       width,
       height,
       dx,
@@ -163,6 +164,21 @@ export function spawnEnemies(
       py,
       radius
     ));
+  }
+  if (amount > src.length) {
+    for (let i = 0; i < src.length; i++) {
+      for (let j = 0; j < index; j++) {
+        spawn(i);
+      }
+    }
+    for (let i = 0; i < amount%src.length; i++) {
+      spawn(i);
+    }
+  }
+  if (amount <= src.length) {
+    for (let i = 0; i < amount; i++) {
+      spawn(i);
+    }
   }
   return sprites;
 }
