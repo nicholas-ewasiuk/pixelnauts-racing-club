@@ -38,7 +38,7 @@ export const Body: React.FC = () => {
   };
 
   const playWithout = () => {
-    setOrcas([['tokyo','orca','astronaut_helmet','smirk','droopy','none']]);
+    setOrcas([['river','dolphin','none','smile','droopy','none']]);
   }
 
   const refetchOrcas = useCallback(async () => {
@@ -83,12 +83,12 @@ export const Body: React.FC = () => {
             />
         </>
       }
-      {!isPlaying && !wallet && 
+      {!isPlaying && !orcas && 
         <button
           css={[button]}
           onClick={playWithout}
         >
-          Just Play
+          Borrow the dolphin
         </button>
       }
       { orcas && !isPlaying &&
@@ -185,11 +185,3 @@ const small = css`
   width: 100px;
   height: 40px;
 `;
-
-/*
-  Attributions todo:
-    ilmoi - NFT fetching code example
-    javidx9 - collisions game logic frame rate limits etc
-    pixelnauts - artwork
-    franks labratory - "How to make a Game with Javascript and HTML Canvas"
-*/

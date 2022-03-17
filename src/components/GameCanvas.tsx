@@ -11,6 +11,7 @@ import sound from "url:../assets/main-theme.ogg"
 import world from '../assets/environment';
 import enemies from '../assets/enemies';
 import { drawOrcaGameSprite, drawSprite, newOrcaSprite, newSprite, spawnEnemies } from '../helpers/util';
+import { OrcaSprite, Sprite } from '../helpers';
 
 type Props = {
   orcaTraits: string[];
@@ -23,6 +24,11 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   const [ restart, setRestart ] = useState<boolean>(false);
   const [ isHelpOpen, setIsHelpOpen ] = useState<boolean>(false);
   const [ isCreditsOpen, setIsCreditsOpen ] = useState<boolean>(false);
+  const [ isIntroOpen, setIsIntroOpen ] = useState<boolean>(true);
+  const [ score, setScore ] = useState<number>(0);
+  const [ Orca, setOrca ] = useState<OrcaSprite | null>(null);
+  const [ Rugs, setRugs ] = useState<Sprite[] | null>(null);
+  const [ Environment, setEnvironment ] = useState<Sprite | null>(null);
 
   const audioRef = useRef(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -37,6 +43,11 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   const handleRestart = (e) => {
     setRestart(false); 
     setGameState(0);
+    setScore(0);
+    setIsIntroOpen(false);
+    setOrca(null);
+    setRugs(null);
+    setEnvironment(null);
   }
 
   const handlePause = (e) => {
@@ -123,10 +134,10 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   
 
       const scale = 2;
-      let enemyCount = 7;
-      const enemySpacing = 1500;
+      let enemyCount = 10;
+      const enemySpacing = 1000;
       let enemySpeed = 6;
-      let enemySpdIncrease = 0.7;
+      let enemySpdIncrease = 0.8;
 
       //Create the images from the selected orcanaut.
       const [
@@ -138,33 +149,43 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         sAccessory
       ] = orcaTraits;
 
-      const orca = newOrcaSprite(
-        background[sBg],
-        body[sBody],
-        hat[sHat],
-        mouth[sMouth],
-        eyes[sEyes],
-        accessory[sAccessory],
-        3,
-        scale,
-        150,
-        300
-      );
+      let orca: OrcaSprite;
+      if (!Orca) {
+        orca = newOrcaSprite(
+          background[sBg],
+          body[sBody],
+          hat[sHat],
+          mouth[sMouth],
+          eyes[sEyes],
+          accessory[sAccessory],
+          3,
+          scale,
+          150,
+          300
+        );
+      } else { orca = Orca };
 
-      const environment = newSprite(world.sandy_bottom,400,300,0,0,undefined,scale);
-      const rugs = spawnEnemies(
-        enemyCount, 
-        enemies.rug_lrg,
-        40,
-        32,
-        0,
-        0,
-        6,
-        scale,
-        [canvas.width, canvas.width+enemySpacing],
-        [canvas.height/6+16, canvas.height-16],
-        22
-      )
+      let environment: Sprite;
+      if (!Environment) {
+        environment = newSprite(world.sandy_bottom,400,300,0,0,undefined,scale);
+      } else { environment = Environment};
+
+      let rugs: Sprite[];
+      if (!Rugs) {
+        rugs = spawnEnemies(
+          enemyCount, 
+          enemies.rug_lrg,
+          40,
+          32,
+          0,
+          0,
+          6,
+          scale,
+          [canvas.width, canvas.width+enemySpacing],
+          [canvas.height/6+16, canvas.height-16],
+          22
+        );
+      } else { rugs = Rugs };
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -202,6 +223,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             if (rugs[i].px+rugs[i].radius < 0) {
                 rugs[i].px = Math.random() * enemySpacing + canvas.width;
                 rugs[i].py = Math.random() * (canvas.height - canvas.height/6) + canvas.height/6-rugs[i].radius;
+                setScore(x => x + 1);
             }
           }
           //Level Logic
@@ -212,9 +234,9 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             for (let i = 0; i < rugs.length; i++) {
               rugs[i].speed += enemySpdIncrease;
             }
-            orca.speed += 0.2;
+            orca.speed += 0.25;
             animRate *= .95;
-            scrollSpd *= 1.15;
+            scrollSpd *= 1.25;
             lvlCounter = 0;
           }
           //Animation Logic
@@ -255,12 +277,12 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
               lvlRestart = true;
               animRate = 999999999;
               scrollSpd = 0;
+              enemySpdIncrease = 0;
               for (let i = 0; i < rugs.length; i++) {
                 rugs[i].speed = 0;
               }
               document.removeEventListener("keydown", keyDownHandler, false);
               audioRef.current.pause();
-
             }
           }
           if (orca.py > ground-orca.radius) {
@@ -268,6 +290,17 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           }
           if (orca.py < canvas.height/6+orca.radius) {
             orca.py = canvas.height/6+orca.radius;
+          }
+          if (orca.px < orca.radius) {
+            orca.px = orca.radius;
+          }
+          if (orca.px > canvas.width-orca.radius) {
+            orca.px = canvas.width-orca.radius;
+          }
+          if (!lvlRestart) {
+            setOrca(orca);
+            setRugs(rugs);
+            setEnvironment(environment);
           }
           lag -= simFrameDuration;
         }
@@ -324,32 +357,43 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         align-items: center;
       `}
     >
+      <div
+        css={css`
+          display: flex;
+          flex-direction: row;
+          justify-content: space-evenly;
+          margin-top: 100px;
+          width: 750px;
+          font-size: 24px;
+        `}
+      >
+        <p>Score: {score}</p>
+        { restart && 
+          <p>
+            Game Over
+          </p>
+        }
+      </div>
       <div 
         css={css`
           display: flex;
+          flex-direction: column;
           justify-content: center;
           align-items: center;
-          margin: 100px 0 20px 0;
+          margin: 20px 0 20px 0;
           border: 3px solid #1d257a;
           width: 820px;
           height: 620px;
         `}
       >
-        { restart && 
+        { gameState == 0 && isIntroOpen &&
           <p
             css={css`
-              position: absolute;
-              top: 0;
-              right: 25%;
-              left: 25%;
-              bottom: auto
-              width: 50%;
-              height: auto;
+              align-text: center;
               font-size: 24px;
-              text-align: center;
             `}
           >
-            Game Over
+            Press start below...
           </p>
         }
         <canvas
@@ -375,7 +419,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             css={[button]}
             onClick={handlePlay}
           >
-            Click to Play
+            Start
           </button>
         }
         { gameState == 1 && !restart && 
@@ -392,7 +436,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             disabled={!restart}
             onClick={handleRestart}
           >
-            Restart?
+            Restart
           </button>
         }
         <button
@@ -414,21 +458,30 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         </p>
       }
       { isCreditsOpen &&
-        <p 
+        <section
           css={css`
+            margin-top: 30px;
             text-align: center;
             font-size: 16px;
+            & > ul {
+              list-style: none;
+            }
           `}
         >
-          Nick Ewasiuk - Developer<br></br>
-          Gavin Leeper - Music<br></br>
-          Christine Vautour - Environment Artist<br></br>
-          Special Thanks<br></br>
-          Ade Balogun - Pixelnauts Artwork<br></br>
-          The entire Orca team! - Orcanauts NFT Project<br></br>
-          @_ilmoi - nftarmory.me repo was an invaluable resource<br></br>
-          @javidx9 - Programming collisions and game engines youtube videos<br></br>
-        </p>
+          <ul>
+            <li>Nick Ewasiuk - <a href="https://github.com/nicholas-ewasiuk">Developer</a></li>
+            <li>Gavin Leeper - <a href="https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos">Music</a></li>
+            <li>Christine Vautour - <a href="https://www.artstation.com/fruitcakette">Environment Artist</a></li>
+          </ul>
+          <h4>Special Thanks</h4>
+          <ul>
+            <li>Ade Balogun - <a href="https://github.com/Baloguna16/pixelnaut-assets">Pixelnauts Artwork</a></li>
+            <li>@corcorarium - <a href="https://twitter.com/corcorarium">Orcanauts Artwork</a></li>
+            <li>The entire Orca team! - <a href="https://orcanauts.orca.so">Orcanauts NFT Project</a></li>
+            <li>@_ilmoi - <a href="https://github.com/ilmoi/nft-armory">nftarmory.me</a> was an invaluable resource</li>
+            <li>@javidx9 - Programming game engine <a href="https://www.youtube.com/c/javidx9">Youtube videos</a></li>
+          </ul>
+        </section>
       }
       <audio
         ref={audioRef}

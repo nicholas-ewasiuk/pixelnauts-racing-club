@@ -15,7 +15,10 @@ export const WalletButton = ({ wallet, orcas }: Props) => {
 
   useEffect(() => {
     if (wallet) {
-      setTimeout(() => {setLoadingMsg("Do you own an Orcanaut? Loading may take a while if you have many NFTs.")}, 10000);
+      setTimeout(() => {
+        setLoadingMsg("Do you own an Orcanaut? Loading may take a while if you have many NFTs.");
+        
+      }, 10000);
     }
   }, [wallet])
 
