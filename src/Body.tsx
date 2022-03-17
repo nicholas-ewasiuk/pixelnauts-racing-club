@@ -7,9 +7,8 @@ import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
 import { NFTGet } from "./actions/NFTget";
 import { GameCanvas } from "./components/GameCanvas";
 import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
-import { lighten } from "polished";
 import { SelectOrcaMenu } from "./components/SelectOrcaMenu";
-import sound from "url:./assets/main-theme.mp3"
+
 
 export const Body: React.FC = () => {
   const [ orcas, setOrcas ] = useState<string[][] | null>(null);
@@ -126,7 +125,7 @@ export const Body: React.FC = () => {
           </button>
         </>
       }
-      { wallet && !isPlaying &&
+      { orcas && !isPlaying &&
         <button
           css={[button, small]}
           onClick={() => setIsHelpOpen(!isHelpOpen)}
@@ -141,10 +140,10 @@ export const Body: React.FC = () => {
             font-size: 24px
           `}
         >
-          This game requires an Orcanaut to play.<br></br>
+          This game utilizes the Orcanauts NFTs.<br></br>
           You can adopt one at <a href="https://magiceden.io/marketplace/orcanauts">Magic Eden</a>.<br></br>
-          Arrow keys to move<br></br>
-          Esc to pause
+          Arrow / W A S D keys to move<br></br>
+          Don't get rugged!
         </p>
       }
       { isPlaying && orcas &&
@@ -178,7 +177,7 @@ const button = css`
   font-weight: inherit;
   color: #1d257a;
   &:hover {
-    background: ${lighten(0.1, "#1d257a")};
+    background: #ededed;
   }
 `;
 

@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
-import { lighten } from 'polished';
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
@@ -250,11 +249,18 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             let deltaPy = orca.py - rugs[i].py;
             let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
             let minPsq = (rugs[i].radius + orca.radius) * (rugs[i].radius + orca.radius);
-            //Game lost condition below
+            //Game Lost Condition
             if (deltaPsq < minPsq) {
               setRestart(true);
               lvlRestart = true;
+              animRate = 999999999;
+              scrollSpd = 0;
+              for (let i = 0; i < rugs.length; i++) {
+                rugs[i].speed = 0;
+              }
+              document.removeEventListener("keydown", keyDownHandler, false);
               audioRef.current.pause();
+
             }
           }
           if (orca.py > ground-orca.radius) {
@@ -329,6 +335,23 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           height: 620px;
         `}
       >
+        { restart && 
+          <p
+            css={css`
+              position: absolute;
+              top: 0;
+              right: 25%;
+              left: 25%;
+              bottom: auto
+              width: 50%;
+              height: auto;
+              font-size: 24px;
+              text-align: center;
+            `}
+          >
+            Game Over
+          </p>
+        }
         <canvas
           ref={canvasRef}>
         </canvas>
@@ -357,7 +380,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         }
         { gameState == 1 && !restart && 
           <button
-            css={[button, small]}
+            css={[button]}
             onClick={handlePause}
           >
             {isPaused ? "Resume" : "Pause"}
@@ -365,7 +388,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         }
         { restart &&
           <button 
-            css={[button, small]}
+            css={[button]}
             disabled={!restart}
             onClick={handleRestart}
           >
@@ -386,7 +409,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             font-size: 24px
           `}
         >
-          Arrow / WASD keys to move.<br></br>
+          Arrow / W A S D keys to move.<br></br>
           Don't get rugged!
         </p>
       }
@@ -432,7 +455,7 @@ const button = css`
   font-weight: inherit;
   color: #1d257a;
   &:hover {
-    background: ${lighten(0.1, "#1d257a")};
+    background: #ededed;
   }
 `;
 

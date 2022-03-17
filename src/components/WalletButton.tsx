@@ -1,11 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import { lighten } from 'polished';
 import { ConnectedWallet } from '@saberhq/use-solana';
 import { useWalletKit } from '@gokiprotocol/walletkit';
-import { breakpoints } from '../App';
-
 
 type Props = {
   wallet: ConnectedWallet | null,
@@ -72,7 +69,7 @@ const button = css`
   font-weight: inherit;
   color: #1d257a;
   &:hover {
-    background: ${lighten(0.1, "#1d257a")};
+    background: #ededed;
   }
 `;
 
@@ -82,7 +79,7 @@ const connected = css`
   font-weight: inherit;
   font-size: 20px;
   &:hover {
-    background: ${lighten(0.1, "#1d257a")};
+    background: #ededed;
   }
 `
 

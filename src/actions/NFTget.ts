@@ -1,4 +1,3 @@
-import { PublicKey } from "@saberhq/solana-contrib";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { 
   Metadata,
@@ -8,7 +7,7 @@ import axios from 'axios';
 import { INFT } from '../helpers';
 import { deserializeTokenAccount, deserializeTokenMint } from '../helpers/spl-token';
 import { okToFailAsync } from '../helpers/error';
-import { Connection } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
 
 interface IToken {
   mint: PublicKey;
