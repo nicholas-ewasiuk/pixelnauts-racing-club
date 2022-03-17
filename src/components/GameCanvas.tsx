@@ -11,7 +11,7 @@ import mouth from '../assets/pixelnauts/mouth';
 import sound from "url:../assets/main-theme.ogg"
 import world from '../assets/environment';
 import enemies from '../assets/enemies';
-import { drawOrcaGameSprite, drawSprite, newOrcaSprite, newSprite } from '../helpers/util';
+import { drawOrcaGameSprite, drawSprite, newOrcaSprite, newSprite, spawnEnemies } from '../helpers/util';
 
 type Props = {
   orcaTraits: string[];
@@ -126,6 +126,9 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       let animCounter = 0;
 
       const scale = 2;
+      let enemyCount = 7;
+      const enemySpacing = 800;
+      let enemySpeed = 7;
 
       //Create the images from the selected orcanaut.
       const [
@@ -151,9 +154,19 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       );
 
       const environment = newSprite(world.sandy_bottom,400,300,0,0,undefined,scale);
-      const rug = newSprite(enemies.rug,32,32,0,0,6,scale,400,200);
-
-      console.log(environment.speed);
+      const rugs = spawnEnemies(
+        enemyCount, 
+        enemies.rug,
+        32,
+        16,
+        0,
+        0,
+        6,
+        scale,
+        canvas.width,
+        [canvas.height, canvas.height/3],
+        enemySpacing,
+      )
 
       //Game Loop
       timerId = requestAnimationFrame(draw);
@@ -185,11 +198,13 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           if (downPressed) {
             orca.py += orca.speed;
           }
-          //Gate Logic
-          rug.px -= rug.speed;
-          if (rug.px < 0) {
-              rug.px = canvas.width;
-              rug.py = Math.random() * (canvas.height - canvas.height*1/3 - 70) + canvas.height*1/3;
+          //Enemy Logic
+          for (let i = 0; i < rugs.length; i++) {
+            rugs[i].px -= rugs[i].speed;
+            if (rugs[i].px < 0) {
+                rugs[i].px = Math.random() * enemySpacing + canvas.width;
+                rugs[i].py = Math.random() * (canvas.height - canvas.height*1/3 - 70) + canvas.height*1/3;
+            }
           }
           //Animation Logic
           if (environment.frame < 2) {
@@ -208,26 +223,33 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
               if (orca[item]['frame'] >= 9)
                 orca[item]['frame'] = 0;
               }
-            if (rug.frame < 9) {
-              rug.frame += 1;
-            } else {
-              rug.frame = 0;
+            for (let i = 0; i < rugs.length; i++) {
+              if (rugs[i].frame < 9) {
+                rugs[i].frame += 1;
+              } else {
+                rugs[i].frame = 0;
+              }
             }
             animCounter = 0;
           }
           //Collisions
-          let deltaPx = orca.px - rug.px;
-          let deltaPy = orca.py - rug.py;
-          let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
-          let minPsq = (rug.radius + orca.radius) * (rug.radius + orca.radius);
+          for (let i = 0; i < rugs.length; i++) {
+            let deltaPx = orca.px - rugs[i].px;
+            let deltaPy = orca.py - rugs[i].py;
+            let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
+            let minPsq = (rugs[i].radius + orca.radius) * (rugs[i].radius + orca.radius);
+            //Game lost condition below
+            if (deltaPsq < minPsq) {
+              setRestart(true);
+              lvlRestart = true;
+              audioRef.current.pause();
+            }
+          }
           if (orca.py > ground-orca.radius) {
             orca.py = ground-orca.radius;
           }
-          //Game lost condition below
-          if (deltaPsq < minPsq) {
-            setRestart(true);
-            lvlRestart = true;
-            audioRef.current.pause();
+          if (orca.py < canvas.height/3+orca.radius) {
+            orca.py = canvas.height/3+orca.radius;
           }
           lag -= simFrameDuration;
         }
@@ -248,15 +270,19 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           ctx.fill();
           ctx.closePath();
 
-          //Draw enemy collider
-          ctx.beginPath();
-          ctx.arc(rug.px, rug.py, rug.radius, 0, Math.PI*2);
-          ctx.fillStyle = "#e75569";
-          ctx.fill();
-          ctx.closePath();
+
 
           drawOrcaGameSprite(ctx, orca);
-          drawSprite(ctx, rug, 32, 20);
+          for (let i = 0; i < rugs.length; i++) {
+            /*Draw enemy colliders
+            ctx.beginPath();
+            ctx.arc(rugs[i].px, rugs[i].py, rugs[i].radius, 0, Math.PI*2);
+            ctx.fillStyle = "#e75569";
+            ctx.fill();
+            ctx.closePath();
+            */
+            drawSprite(ctx, rugs[i],32,20);
+          }
 
           renderStart = timestamp + renderFrameDuration;
         }
