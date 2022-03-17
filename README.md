@@ -2,7 +2,11 @@
 
 <img src="/src/assets/pixelnauts-home01.png">
 
-An endless runner browser game utilizing the <a href=https://orcanauts.orca.so>Orcanauts</a> NFT project, and <a href=https://github.com/Baloguna16/pixelnaut-assets>Pixelnauts</a> artwork. 
+An endless runner browser game utilizing the <a href=https://orcanauts.orca.so>Orcanauts</a> NFT project drawn by <a href=https://twitter.com/corcorarium>@corcorarium</a>, and the <a href=https://github.com/Baloguna16/pixelnaut-assets>Pixelnauts</a> artwork by <a href=https://twitter.com/Ade_in_myLife>Ade Balogun</a>.<br>
+
+Music by <a href=https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos>Gavin Leeper</a><br>
+
+Environment Art by <a href=https://www.artstation.com/fruitcakette>Christine Vautour</a><br>
 
 ## How to play
 
