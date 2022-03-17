@@ -25,6 +25,9 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   const [ isHelpOpen, setIsHelpOpen ] = useState<boolean>(false);
   const [ isCreditsOpen, setIsCreditsOpen ] = useState<boolean>(false);
   const [ isIntroOpen, setIsIntroOpen ] = useState<boolean>(true);
+  const [ AnimRate, setAnimRate ] = useState<number>(30);
+  const [ AnimCounter, setAnimCounter ] = useState<number>(0);
+  const [ ScrollSpd, setScrollSpd ] = useState<number>(0.001);
   const [ score, setScore ] = useState<number>(0);
   const [ Orca, setOrca ] = useState<OrcaSprite | null>(null);
   const [ Rugs, setRugs ] = useState<Sprite[] | null>(null);
@@ -126,10 +129,10 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       let lag = 0;
 
       let lvlRate = 900;
-      let animRate = 30;
-      let scrollSpd = 0.001;
+      let animRate = AnimRate;
+      let scrollSpd = ScrollSpd;
 
-      let animCounter = 0;
+      let animCounter = AnimCounter;
       let lvlCounter = levelCounter;
   
 
@@ -174,7 +177,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       if (!Rugs) {
         rugs = spawnEnemies(
           enemyCount, 
-          [enemies.rug_lrg, enemies.rug_lrg_teal, enemies.rug_lrg_purple],
+          [enemies.rug_lrg, enemies.rug_lrg_blue, enemies.rug_lrg_purple],
           40,
           32,
           0,
@@ -229,6 +232,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           //Level Logic
           if (lvlCounter < lvlRate) {
             lvlCounter += 1;
+            setLevelCounter(lvlCounter);
           }
           if (lvlCounter >= lvlRate) {
             for (let i = 0; i < rugs.length; i++) {
@@ -238,6 +242,9 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             animRate *= .95;
             scrollSpd *= 1.25;
             lvlCounter = 0;
+            setAnimRate(animRate);
+            setScrollSpd(scrollSpd);
+            setLevelCounter(lvlCounter);
           }
           //Animation Logic
           if (environment.frame < 2) {
