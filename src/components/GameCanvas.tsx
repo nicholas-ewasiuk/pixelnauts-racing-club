@@ -1,17 +1,23 @@
 /** @jsxImportSource @emotion/react */
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { css } from '@emotion/react';
+import { 
+  drawOrcaGameSprite, 
+  drawSprite, 
+  newOrcaSprite, 
+  newSprite, 
+  spawnEnemies 
+} from '../helpers/util';
+import { OrcaSprite, Sprite } from '../helpers';
+import sound from "url:../assets/main-theme.ogg"
 import accessory from '../assets/pixelnauts/accessory';
 import background from '../assets/pixelnauts/background';
 import body from '../assets/pixelnauts/body';
 import eyes from '../assets/pixelnauts/eyes';
 import hat from '../assets/pixelnauts/hat';
 import mouth from '../assets/pixelnauts/mouth';
-import sound from "url:../assets/main-theme.ogg"
 import world from '../assets/environment';
 import enemies from '../assets/enemies';
-import { drawOrcaGameSprite, drawSprite, newOrcaSprite, newSprite, spawnEnemies } from '../helpers/util';
-import { OrcaSprite, Sprite } from '../helpers';
 
 type Props = {
   orcaTraits: string[];
@@ -34,7 +40,6 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
 
   const audioRef = useRef(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  //const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   const handlePlay = (e) => {
     setGameState(1);
@@ -43,6 +48,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   }
 
   const handleRestart = (e) => {
+    //Reset all the states.
     setRestart(false); 
     setGameState(0);
     setScore(0);
@@ -121,10 +127,12 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
 
       let lvlRestart = restart;
 
+      //Frame-rate to draw sprites at
       let renderFps = 120;
       let renderStart = 0;
       let renderFrameDuration = 1000/renderFps;
 
+      //Frame-rate for physics, and collision calculations
       let simFps = 60;
       let previous = 0; 
       const simFrameDuration = 1000/simFps;
@@ -280,7 +288,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
             let deltaPy = orca.py - rugs[i].py;
             let deltaPsq = deltaPx * deltaPx + deltaPy * deltaPy;
             let minPsq = (rugs[i].radius + orca.radius) * (rugs[i].radius + orca.radius);
-            //Game Lost Condition
+            //Game Lost Condition. Player circle collider overlaps enemy collider.
             if (deltaPsq < minPsq) {
               setRestart(true);
               lvlRestart = true;

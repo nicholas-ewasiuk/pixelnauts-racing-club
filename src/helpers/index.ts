@@ -12,7 +12,7 @@ export interface INFT {
   metadataPDA?: PublicKey;
   metadataOnchain: MetadataData;
   metadataExternal?: any; 
-}
+}// ^INFT code from @ilmoi also
 
 export interface Sprite {
   readonly img: HTMLImageElement

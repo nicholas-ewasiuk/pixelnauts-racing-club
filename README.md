@@ -34,7 +34,7 @@ Franks laboratory - <a href="https://youtu.be/EYf_JwzwTlQ">How to Make a Game wi
 
 Special thanks to the entire team at <a href="https://www.orca.so">Orca</a> for creating the <a href="https://orcanauts.orca.so">Orcanauts</a>!
 
-Built using:
+Built using:<br>
 <a href="https://github.com/GokiProtocol/walletkit">GokiProtocol/walletkit</a><br>
 <a href="https://github.com/saber-hq/saber-common">saber-hq/saber-common</a><br>
 <a href="https://github.com/metaplex-foundation">Metaplex</a><br>
