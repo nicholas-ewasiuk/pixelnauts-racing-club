@@ -4,9 +4,9 @@
 
 An endless runner browser game utilizing the <a href=https://orcanauts.orca.so>Orcanauts</a> NFT project drawn by <a href=https://twitter.com/corcorarium>@corcorarium</a>, and the <a href=https://github.com/Baloguna16/pixelnaut-assets>Pixelnauts</a> artwork by <a href=https://twitter.com/Ade_in_myLife>Ade Balogun</a>.<br>
 
-##### <div align="center">Music by <a href=https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos>Gavin Leeper</a><br>
+<div align="center">Music by <a href=https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos>Gavin Leeper</a><br></div>
 
-##### Environment Art by <a href=https://www.artstation.com/fruitcakette>Christine Vautour</a><br></div>
+<div align="center">Environment Art by <a href=https://www.artstation.com/fruitcakette>Christine Vautour</a><br></div>
 
 ## How to play
 
@@ -14,7 +14,7 @@ Connect a wallet containing Orcanauts or hit "Just Play".
 
 WASD / Arrow keys to move. 
 
-Don't get rugged!
+Avoid the rugs.
 
 ## Running the app
 
