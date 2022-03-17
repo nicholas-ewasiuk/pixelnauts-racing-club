@@ -4,7 +4,7 @@
   "description": "Pixelnauts racing game for the Riptide Hackathon",
   "source": "src/index.html",
   "author": "nicholas-ewasiuk <ewasiuk.nick@gmail.com>",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "scripts": {
     "start": "parcel",
     "build": "parcel build"
