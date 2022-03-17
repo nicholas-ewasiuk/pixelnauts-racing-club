@@ -61,9 +61,10 @@ export function newSprite(
   dx: number, 
   dy: number,
   speed: number = 1,
+  scale: number = 1,
   px: number = 0,
   py: number = 0,
-  radius: number = width >= height ? height/2-2 : width/2-2,
+  radius: number = width >= height ? height/2*scale-2 : width/2*scale-2,
   frame: number = 0,
 ) : Sprite {
   const img = new Image();
@@ -75,6 +76,7 @@ export function newSprite(
     dx: dx,
     dy: dy,
     speed: speed,
+    scale: scale,
     px: px,
     py: py,
     radius: radius,
@@ -86,7 +88,6 @@ export function newSprite(
 export function drawSprite(
   ctx: CanvasRenderingContext2D, 
   sprite: Sprite, 
-  scale: number = 1,
   offsetX: number = 0,
   offsetY: number = 0,
 ) {
@@ -96,10 +97,10 @@ export function drawSprite(
    0,  
    sprite.width,
    sprite.height,
-   sprite.px - offsetX + sprite.dx * scale,
-   sprite.py - offsetY + sprite.dy * scale,
-   sprite.width * scale,
-   sprite.height * scale
+   sprite.px - offsetX + sprite.dx * sprite.scale,
+   sprite.py - offsetY + sprite.dy * sprite.scale,
+   sprite.width * sprite.scale,
+   sprite.height * sprite.scale
   );
 }
 
@@ -111,18 +112,20 @@ export function newOrcaSprite(
   eyes: any,
   accessory: any,
   speed: number = 0,
+  scale: number = 1,
   px: number = 0,
   py: number = 0,
 ) : OrcaSprite {
   const bgWidth = 40;
   const orca: OrcaSprite = {
-    background: newSprite(background,bgWidth,40,0,0,speed),
-    body: newSprite(body,32,19,2,16,speed),
-    hat: newSprite(hat,28,36,8,4,speed),
-    mouth: newSprite(mouth,28,20,8,16,speed),
-    eyes: newSprite(eyes,24,32,12,4,speed),
-    accessory: newSprite(accessory,40,40,0,0,speed),
+    background: newSprite(background,bgWidth,40,0,0,speed,scale),
+    body: newSprite(body,32,19,2,16,speed,scale),
+    hat: newSprite(hat,28,36,8,4,speed,scale),
+    mouth: newSprite(mouth,28,20,8,16,speed,scale),
+    eyes: newSprite(eyes,24,32,12,4,speed,scale),
+    accessory: newSprite(accessory,40,40,0,0,speed,scale),
     speed: speed,
+    scale: scale,
     px: px,
     py: py,
     radius: bgWidth/2-2,
@@ -130,28 +133,26 @@ export function newOrcaSprite(
   return orca;
 }
 
-export function drawGameOrcaSprite(
+export function drawOrcaGameSprite(
   ctx: CanvasRenderingContext2D,
   orcaSprite: OrcaSprite,
-  scale: number = 1,
-  offsetX: number = 24*scale,
-  offsetY: number = 25*scale
+  offsetX: number = 24*orcaSprite.scale,
+  offsetY: number = 25*orcaSprite.scale
 ) {
-  drawSprite(ctx, orcaSprite.body, scale, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
-  drawSprite(ctx, orcaSprite.eyes, scale, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
-  drawSprite(ctx, orcaSprite.mouth, scale, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
-  drawSprite(ctx, orcaSprite.hat, scale, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
+  drawSprite(ctx, orcaSprite.body, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
+  drawSprite(ctx, orcaSprite.eyes, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
+  drawSprite(ctx, orcaSprite.mouth, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
+  drawSprite(ctx, orcaSprite.hat, -orcaSprite.px+offsetX, -orcaSprite.py+offsetY);
 }
 
-export function drawMenuOrcaSprite(
+export function drawOrcaMenuSprite(
   ctx: CanvasRenderingContext2D,
   orcaSprite: OrcaSprite,
-  scale: number = 1,
 ) {
-  drawSprite(ctx, orcaSprite.background, scale, orcaSprite.px, orcaSprite.py);
-  drawSprite(ctx, orcaSprite.body, scale, orcaSprite.px, orcaSprite.py);
-  drawSprite(ctx, orcaSprite.eyes, scale, orcaSprite.px, orcaSprite.py);
-  drawSprite(ctx, orcaSprite.mouth, scale, orcaSprite.px, orcaSprite.py);
-  drawSprite(ctx, orcaSprite.hat, scale, orcaSprite.px, orcaSprite.py);
-  drawSprite(ctx, orcaSprite.accessory, scale, orcaSprite.px, orcaSprite.py);
+  drawSprite(ctx, orcaSprite.background, orcaSprite.px, orcaSprite.py);
+  drawSprite(ctx, orcaSprite.body, orcaSprite.px, orcaSprite.py);
+  drawSprite(ctx, orcaSprite.eyes, orcaSprite.px, orcaSprite.py);
+  drawSprite(ctx, orcaSprite.mouth, orcaSprite.px, orcaSprite.py);
+  drawSprite(ctx, orcaSprite.hat, orcaSprite.px, orcaSprite.py);
+  drawSprite(ctx, orcaSprite.accessory, orcaSprite.px, orcaSprite.py);
 }
