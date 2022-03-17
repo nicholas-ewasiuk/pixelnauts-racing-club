@@ -480,7 +480,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
         >
           <ul>
             <li>Nick Ewasiuk - <a href="https://github.com/nicholas-ewasiuk">Programming</a></li>
-            <li>Gavin Leeper - <a href="https://www.youtube.com/channel/UCUHFOcfiUoYHhMhLNuY_dUg/videos">Music</a></li>
+            <li>Gavin Leeper - <a href="https://www.gavinleepermusic.com/">Music</a></li>
             <li>Christine Vautour - <a href="https://www.artstation.com/fruitcakette">Environment Art</a></li>
           </ul>
           <h4>Special Thanks</h4>
