@@ -8,6 +8,8 @@ import { INFT } from '../helpers';
 import { deserializeTokenAccount, deserializeTokenMint } from '../helpers/spl-token';
 import { okToFailAsync } from '../helpers/error';
 import { Connection, PublicKey } from "@solana/web3.js";
+import events from 'events';
+import { EE, estimateNFTLoadTime, IUpdateLoadingParams, LoadStatus } from "../helpers/loading";
 
 interface IToken {
   mint: PublicKey;
@@ -68,6 +70,7 @@ const tokensToEnrichedNFTs = async (tokens: IToken[], connection: Connection): P
 }
 
 export const NFTGet = async (owner: PublicKey, connection: Connection): Promise<INFT[]> => {
+  const t1 = performance.now();
   let tokens: IToken[] = [];
   try {
     tokens = await getTokensByOwner(owner, connection);
@@ -77,7 +80,24 @@ export const NFTGet = async (owner: PublicKey, connection: Connection): Promise<
   if (tokens.length === 0) {
     throw new Error("No NFTs found");
   }
+  EE.emit('loading', {
+    newStatus: LoadStatus.Loading,
+    newProgress: 50,
+    maxProgress: 90,
+    newText: `Found ${
+      tokens.length
+    } potential NFTs. Fetching metadata... ETA: <${estimateNFTLoadTime(tokens.length)} min`,
+  } as IUpdateLoadingParams);
+
+  const t2 = performance.now();
+  console.log(`Found ${tokens.length} tokens`);
+  console.log('Time:', (t2 - t1) / 1000);
+
   const nfts = await tokensToEnrichedNFTs(tokens, connection);
+  const t3 = performance.now();
+  console.log(`Prepared a total ${nfts.length} NFTs`);
+  console.log('Time:', (t3 - t2) / 1000);
+  console.log('TOTAL time:', (t3 - t1) / 1000);
 
   return nfts;
 }

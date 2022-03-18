@@ -1,10 +1,22 @@
 import { INFT, OrcaSprite } from ".";
 import { Sprite } from ".";
+import { EE, IUpdateLoadingParams, LoadStatus } from "./loading";
 
 export function filterOrcanauts(nfts: INFT[]): INFT[] {
-  return nfts.filter((nft) => {
-    return nft.metadataOnchain.data.symbol === "ORCANAUT";
-  })
+  const orcas = nfts.filter((nft) => {
+    if (nft.metadataOnchain) {
+      return nft.metadataOnchain.data.symbol === "ORCANAUT";
+    }
+  });
+  if (!orcas.length) {
+    EE.emit('loading', {
+      newStatus: LoadStatus.Error,
+      newProgress: 100,
+      maxProgress: 100,
+      newText: `No Orcanauts found. Would you like to use the training dolphin?`,
+    } as IUpdateLoadingParams);
+  }
+  return orcas;
 }
 
 export function pixelateOrcas(nfts: INFT[]) {

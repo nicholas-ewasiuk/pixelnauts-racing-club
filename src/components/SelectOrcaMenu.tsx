@@ -83,7 +83,6 @@ export const SelectOrcaMenu = ({ orcaTraits }: Props) => {
             for (const item in orca) {
               if (orca[item]['frame'] < 10) {
                 orca[item]['frame'] += 1;
-                console.log(orca[item]['frame']);
               }
               if (orca[item]['frame'] >= 10) {
                 orca[item]['frame'] = 0;

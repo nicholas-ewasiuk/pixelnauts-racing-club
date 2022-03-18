@@ -8,6 +8,7 @@ import { NFTGet } from "./actions/NFTget";
 import { GameCanvas } from "./components/GameCanvas";
 import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
 import { SelectOrcaMenu } from "./components/SelectOrcaMenu";
+import { EE, ERR_NO_NFTS, IUpdateLoadingParams, LoadStatus } from "./helpers/loading";
 
 
 export const Body: React.FC = () => {
@@ -15,6 +16,9 @@ export const Body: React.FC = () => {
   const [ index, setIndex ] = useState<number>(0);
   const [ isPlaying, setIsPlaying ] = useState<boolean>(false);
   const [ isHelpOpen, setIsHelpOpen ] = useState<boolean>(false);
+
+  const [ loadingText, setLoadingText ] = useState<string>("Loading...");
+  const [ status, setStatus ] = useState<LoadStatus>(LoadStatus.Idle)
 
   const { connection } = useSolana();
   const wallet = useConnectedWallet();
@@ -41,16 +45,60 @@ export const Body: React.FC = () => {
     setOrcas([['river','dolphin','none','smile','droopy','none']]);
   }
 
+  const updateLoading = (
+    {newStatus, newText} = {} as IUpdateLoadingParams
+  ) => {
+    setStatus(newStatus);
+    setLoadingText(newText);
+  };
+
+  const updateLoadingStdErr = (e: Error) => {
+    updateLoading({
+      newStatus: LoadStatus.Error,
+      newProgress: 0,
+      maxProgress: 0,
+      newText: `Uh oh something went wrong - ${e}`,
+    });
+  };
+
+  const updateLoadingStdWin = () => {
+    updateLoading({
+      newStatus: LoadStatus.Success,
+      newProgress: 0,
+      maxProgress: 0,
+      newText: 'Successfully loaded!',
+    });
+  };
+
   const refetchOrcas = useCallback(async () => {
     if (wallet) {
+      updateLoading({
+        newStatus: LoadStatus.Loading,
+        newProgress: 0,
+        maxProgress: 50,
+        newText: 'Looking for NFTs... ETA: <1 min',
+      })
+      EE.removeAllListeners();
+      EE.on('loading', updateLoading);
       const nfts = await NFTGet(wallet.publicKey, connection)
+        .then((fetchedNFTs) => {
+          if (fetchedNFTs.length) {
+            updateLoadingStdWin();
+            return fetchedNFTs;
+          } else {
+            updateLoadingStdErr(ERR_NO_NFTS);
+          }
+        })
+        .catch(updateLoadingStdErr);
       //Fetching external metadata for all NFTs in wallet is inefficient if just looking for orcas.
       //Need to tweak this at some point.
-      const orcaMetadata = filterOrcanauts(nfts);
-      const orcas = pixelateOrcas(orcaMetadata);
-      console.log(orcas);
-      if (orcas.length) {
-        setOrcas(orcas);
+      if (nfts) {
+        const orcaMetadata = filterOrcanauts(nfts);
+        const orcas = pixelateOrcas(orcaMetadata);
+        console.log(orcas);
+        if (orcas.length) {
+          setOrcas(orcas);
+        }
       }
     }
   }, [wallet]);
@@ -80,6 +128,8 @@ export const Body: React.FC = () => {
             <WalletButton 
               wallet={wallet}
               orcas={orcas}
+              text={loadingText}
+              status={status}
             />
         </>
       }

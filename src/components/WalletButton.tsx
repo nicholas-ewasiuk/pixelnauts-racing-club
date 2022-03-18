@@ -3,24 +3,17 @@ import { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { ConnectedWallet } from '@saberhq/use-solana';
 import { useWalletKit } from '@gokiprotocol/walletkit';
+import { LoadStatus } from '../helpers/loading';
 
 type Props = {
   wallet: ConnectedWallet | null,
   orcas: string[][] | null,
+  text: string,
+  status: LoadStatus,
 }
 
-export const WalletButton = ({ wallet, orcas }: Props) => {
-  const [ loadingMsg, setLoadingMsg ] = useState<string>("Looking for Orcanauts...");
+export const WalletButton = ({ wallet, orcas, text, status }: Props) => {
   const { connect } = useWalletKit();
-
-  useEffect(() => {
-    if (wallet) {
-      setTimeout(() => {
-        setLoadingMsg("Do you own an Orcanaut? Loading may take a while if you have many NFTs.");
-        
-      }, 10000);
-    }
-  }, [wallet])
 
   return (
     <>
@@ -45,10 +38,11 @@ export const WalletButton = ({ wallet, orcas }: Props) => {
           margin: 100px 0 100px 0;
           width: 300px;
           height: 150px;
-          font-size: 24px;
+          text-align: center;
+          font-size: 20px;
         `}
       >
-        {loadingMsg}
+        {text}
       </p>
     }
     </>

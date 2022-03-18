@@ -10,11 +10,11 @@ An endless runner browser game utilizing the <a href="https://orcanauts.orca.so"
 
 ## How to play
 
-Connect a wallet containing Orcanauts or hit "Just Play".
+Connect a wallet containing Orcanauts or borrow the "training dolphin" for practice.
 
 WASD / Arrow keys to move. 
 
-Avoid the rugs.
+Avoid the rugs!
 
 ## Running the app
 
