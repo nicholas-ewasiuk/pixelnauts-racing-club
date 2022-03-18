@@ -87,7 +87,6 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
 
       const keyDownHandler = (e) => {
         e.preventDefault();
-        console.log(e.key);
         if(e.key == "Right" || e.key == "ArrowRight" || e.key =="d") {
           rightPressed = true;
         }
