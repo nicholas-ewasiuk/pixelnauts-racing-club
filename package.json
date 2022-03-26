@@ -6,22 +6,25 @@
   "author": "nicholas-ewasiuk <ewasiuk.nick@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "parcel",
-    "build": "parcel build"
+    "start": "parcel ./src/index.html",
+    "build": "parcel build ./src/index.html"
   },
   "dependencies": {
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@gokiprotocol/walletkit": "^1.6.5",
     "@metaplex-foundation/mpl-token-metadata": "^1.2.5",
+    "@saberhq/solana-contrib": "^1.12.56",
     "@saberhq/use-solana": "^1.12.50",
     "@solana/spl-token": "0.1.x",
     "@solana/web3.js": "^1.36.0",
     "axios": "^0.26.1",
+    "bn.js": "^5.2.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.8",
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.13",
     "parcel": "^2.3.2",
