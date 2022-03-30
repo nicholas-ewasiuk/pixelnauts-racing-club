@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { WalletButton } from "./components/WalletButton";
 import { useConnectedWallet, useSolana } from "@saberhq/use-solana";
+import { Network } from '@saberhq/solana-contrib';
 import { NFTGet } from "./actions/NFTget";
 import { GameCanvas } from "./components/GameCanvas";
 import { filterOrcanauts, pixelateOrcas } from "./helpers/util";
@@ -20,7 +21,7 @@ export const Body: React.FC = () => {
   const [ loadingText, setLoadingText ] = useState<string>("Loading...");
   const [ status, setStatus ] = useState<LoadStatus>(LoadStatus.Idle)
 
-  const { connection } = useSolana();
+  const { connection, network, setNetwork, setEndpoints } = useSolana();
   const wallet = useConnectedWallet();
 
   const startRace = () => {
@@ -106,6 +107,15 @@ export const Body: React.FC = () => {
   useEffect(() => {
     void refetchOrcas();
   }, [refetchOrcas]);
+
+  useEffect(() => {
+    setEndpoints({
+      name: "genesysgo",
+      endpoint: "https://ssc-dao.genesysgo.net/"
+    } as any);
+    setNetwork('genesysgo' as Network);
+    console.log(network);
+  }, [wallet]);
 
   return (
     <AppWrapper>
