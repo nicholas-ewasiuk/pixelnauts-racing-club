@@ -35,6 +35,7 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
   const [ isCreditsOpen, setIsCreditsOpen ] = useState<boolean>(false);
   const [ isIntroOpen, setIsIntroOpen ] = useState<boolean>(true);
   const [ isPaused, setIsPaused ] = useState<boolean>(false);
+  const [ isMuted, setIsMuted ] = useState<boolean>(false);
   //Background scroll and sprite animation speed
   const [ AnimRate, setAnimRate ] = useState<number>(30);
   const [ ScrollSpd, setScrollSpd ] = useState<number>(0.001);
@@ -68,6 +69,15 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
       audioRef.current.play();
     } else {
       audioRef.current.pause();
+    }
+  }
+
+  const handleMute = (e) => {
+    setIsMuted(!isMuted);
+    if (isMuted) {
+      audioRef.current.muted = false;
+    } else {
+      audioRef.current.muted = true;
     }
   }
 
@@ -460,7 +470,13 @@ export const GameCanvas = ({ orcaTraits }: Props) => {
           onClick={() => {setIsCreditsOpen(!isCreditsOpen); setIsHelpOpen(false);}}
         >
           Credits
-        </button>   
+        </button> 
+        <button
+          css={[button, small]}
+          onClick={handleMute}
+        >
+          {isMuted ? "Unmute" : "Mute"}
+        </button>  
       </div>
       { isHelpOpen &&
         <ul

@@ -113,7 +113,7 @@ export const Body: React.FC = () => {
       name: "genesysgo",
       endpoint: "https://ssc-dao.genesysgo.net/"
     } as any);
-    setNetwork('genesysgo' as Network);
+    setNetwork("mainnet-beta");
     console.log(network);
   }, [wallet]);
 
