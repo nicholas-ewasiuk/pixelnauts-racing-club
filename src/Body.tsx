@@ -109,10 +109,12 @@ export const Body: React.FC = () => {
   }, [refetchOrcas]);
 
   useEffect(() => {
+    /*
     setEndpoints({
       name: "genesysgo",
       endpoint: "https://ssc-dao.genesysgo.net/"
     } as any);
+    */
     setNetwork("mainnet-beta");
     console.log(network);
   }, [wallet]);
